@@ -3,7 +3,7 @@ import requests
 from django.conf import settings
 from requests.auth import HTTPBasicAuth
 
-def create_alpaca_broker_account(user, email, first_name, last_name):
+def create_alpaca_broker_account(email, first_name, last_name, street_address, phone_number, date_of_birth):
     url = "https://broker-api.sandbox.alpaca.markets/v1/accounts"
 
     auth = HTTPBasicAuth(settings.ALPACA_BROKER_API_KEY, settings.ALPACA_BROKER_SECRET_KEY)
@@ -16,17 +16,17 @@ def create_alpaca_broker_account(user, email, first_name, last_name):
     payload = {
   "contact": {
     "email_address": email,
-    "phone_number": "+15556667788",
-    "street_address": ["lamatraca"],
+    "phone_number": f"+1{phone_number}",
+    "street_address": [street_address],
     "unit": "et mag",
     "city": "San Mateo",
     "state": "CA",
     "postal_code": "94401"
   },
   "identity": {
-    "given_name": "meow",
-    "family_name": "Doe",
-    "date_of_birth": "1990-01-01",
+    "given_name": first_name,
+    "family_name": last_name,
+    "date_of_birth": date_of_birth,
     "tax_id": "132-56-6739",
     "tax_id_type": "USA_SSN",
     "country_of_citizenship": "AUS",
@@ -66,31 +66,34 @@ def create_alpaca_broker_account(user, email, first_name, last_name):
     }
   ],
   "trusted_contact": {
-    "given_name": first_name,
-    "family_name": last_name,
-    "email_address": email
+    "given_name": "Jane",
+    "family_name": "Doe",
+    "email_address": "x@gmail.com"
   },
   "enabled_assets": [
     "us_equity"
   ]
 }
 
-    print("📤 Enviando solicitud a Alpaca con el siguiente payload:")
+    print("Enviando solicitud a Alpaca con el siguiente payload:")
     print(payload)
 
     response = requests.post(url, json=payload, headers=headers, auth=auth)
 
-    print("📥 Respuesta de Alpaca:")
+    print("Respuesta de Alpaca:")
     print(f"Status Code: {response.status_code}")
     print(response.text)
 
     if response.status_code == 200:
         data = response.json()
+        kyc_status = data.get("identity_verification", {}).get("status", "pendiente")
+
         return {
             "success": True,
             "account_id": data["id"],
-            "kyc_status": data["identity_verification"]["status"]
-        }
+            "kyc_status": kyc_status
+}
+
     else:
         try:
             error = response.json()

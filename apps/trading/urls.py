@@ -1,8 +1,9 @@
 from django.urls import path
 from django.http import HttpResponse
-from . import views
+
+def test_view(request):
+    return HttpResponse("¡Funciona!")
 
 urlpatterns = [
-    path('register/', views.register, name='register'),
+    path('', test_view),
 ]
-
