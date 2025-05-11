@@ -81,10 +81,18 @@ WSGI_APPLICATION = 'AccionesElBosque.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'isw',
+        'USER': 'root',
+        'PASSWORD': 'iihHbSpAmLxQboYbeAPFlstGorRhKwNH',
+        'HOST': 'trolley.proxy.rlwy.net',  
+        'PORT': '30342',       
+        'OPTIONS': {
+            'ssl': {'verify_server_cert': False},
+        },
     }
 }
+
 
 
 # Password validation
@@ -117,6 +125,31 @@ USE_I18N = True
 
 USE_TZ = True
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/plataforma.log'),
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'plataforma': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
