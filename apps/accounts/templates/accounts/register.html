@@ -2,22 +2,542 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro</title>
+    <style>
+      :root {
+        --background: #0d0d18;
+        --surface: #15152a;
+        --text-color: #e0e0e0;
+        --shadow-light: #1a1a30;
+        --shadow-dark: #050510;
+        --accent: #f5cb86; /* Dorado */
+        --accent-light: #ffeb99;
+        --accent-dark: #b39700;
+        --success: #2ecc71;
+        --error: #e74c3c;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 580px;
+        padding: 30px;
+        border-radius: 20px;
+        background: var(--background);
+        box-shadow: 10px 10px 20px var(--shadow-dark),
+          -10px -10px 20px var(--shadow-light);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: var(--accent);
+        font-weight: 600;
+        font-size: 28px;
+        text-shadow: 0 0 5px var(--accent-dark);
+      }
+
+      .messages {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 15px;
+        background: var(--background);
+        box-shadow: inset 5px 5px 10px var(--shadow-dark),
+          inset -5px -5px 10px var(--shadow-light);
+      }
+
+      .messages li {
+        list-style: none;
+        color: var(--success);
+        padding: 5px 0;
+      }
+
+      /* Tabs Styling */
+      .tabs {
+        display: flex;
+        margin-bottom: 25px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 12px 5px;
+        text-align: center;
+        background: var(--background);
+        cursor: pointer;
+        border: none;
+        color: var(--text-color);
+        font-weight: 500;
+        position: relative;
+        transition: all 0.3s ease;
+        box-shadow: 3px 3px 6px var(--shadow-dark),
+          -3px -3px 6px var(--shadow-light);
+        border-radius: 10px;
+        margin: 0 5px;
+      }
+
+      .tab-btn.active {
+        color: var(--accent);
+        box-shadow: inset 2px 2px 5px var(--shadow-dark),
+          inset -2px -2px 5px var(--shadow-light);
+      }
+
+      .tab-btn.completed:after {
+        content: "✓";
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        color: var(--accent);
+        font-size: 14px;
+      }
+
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Progress bar */
+      .progress-container {
+        width: 100%;
+        height: 8px;
+        background: var(--surface);
+        border-radius: 10px;
+        margin-bottom: 25px;
+        box-shadow: inset 2px 2px 4px var(--shadow-dark),
+          inset -2px -2px 4px var(--shadow-light);
+      }
+
+      .progress-bar {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 10px;
+        width: 33.33%;
+        transition: width 0.3s ease;
+        box-shadow: 0 0 10px var(--accent-dark);
+      }
+
+      /* Form styling */
+      form {
+        width: 100%;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--accent-light);
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 15px;
+        background: var(--background);
+        border: none;
+        border-radius: 12px;
+        box-shadow: inset 5px 5px 10px var(--shadow-dark),
+          inset -5px -5px 10px var(--shadow-light);
+        color: var(--text-color);
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        box-shadow: inset 3px 3px 6px var(--shadow-dark),
+          inset -3px -3px 6px var(--shadow-light);
+        border: 1px solid var(--accent-dark);
+      }
+
+      .helptext {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        color: #7f8c8d;
+      }
+
+      ul.errorlist {
+        color: var(--error);
+        margin-top: 5px;
+        padding-left: 15px;
+        font-size: 14px;
+      }
+
+      /* Buttons */
+      .button-group {
+        display: flex;
+        margin-top: 30px;
+        justify-content: space-between;
+      }
+
+      button {
+        padding: 15px 25px;
+        border: none;
+        border-radius: 12px;
+        background: var(--background);
+        color: var(--accent);
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 5px 5px 10px var(--shadow-dark),
+          -5px -5px 10px var(--shadow-light);
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        box-shadow: 3px 3px 6px var(--shadow-dark),
+          -3px -3px 6px var(--shadow-light);
+        background: linear-gradient(145deg, var(--background), var(--surface));
+      }
+
+      button:active {
+        box-shadow: inset 2px 2px 5px var(--shadow-dark),
+          inset -2px -2px 5px var(--shadow-light);
+      }
+
+      button.next-btn,
+      button.submit-btn {
+        background: linear-gradient(145deg, var(--accent-dark), var(--accent));
+        color: var(--background);
+        margin-left: auto;
+      }
+
+      button.prev-btn {
+        background: var(--background);
+        color: var(--text-color);
+      }
+
+      button.submit-btn {
+        padding: 15px 30px;
+      }
+
+      /* Interests bubbles */
+      .interests-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 15px;
+        margin-bottom: 30px;
+      }
+
+      .interest-bubble {
+        padding: 10px 20px;
+        border-radius: 50px;
+        background: var(--background);
+        color: var(--text-color);
+        box-shadow: 3px 3px 6px var(--shadow-dark),
+          -3px -3px 6px var(--shadow-light);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+      }
+
+      .interest-bubble.selected {
+        background: linear-gradient(145deg, var(--accent-dark), var(--accent));
+        color: var(--background);
+        box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+          inset -2px -2px 5px rgba(255, 255, 255, 0.1);
+      }
+
+      .interest-count {
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--accent-light);
+      }
+
+      .count-error {
+        color: var(--error);
+        font-weight: 500;
+      }
+    </style>
   </head>
   <body>
-    <h2>Registro de usuario</h2>
+    <div class="container">
+      <h2>Registro de usuario</h2>
 
-    {% if messages %}
-    <ul>
-      {% for message in messages %}
-      <li style="color: green">{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+      <div class="progress-container">
+        <div class="progress-bar" id="progress"></div>
+      </div>
 
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">Registrarse</button>
-    </form>
+      <div class="tabs">
+        <button type="button" class="tab-btn active" data-target="tab-account">
+          Cuenta
+        </button>
+        <button type="button" class="tab-btn" data-target="tab-personal">
+          Datos personales
+        </button>
+        <button type="button" class="tab-btn" data-target="tab-interests">
+          Intereses
+        </button>
+      </div>
+
+      <form method="post" id="registrationForm">
+        {% csrf_token %}
+
+        <!-- TAB 1: ACCOUNT -->
+        <div class="tab-content active" id="tab-account">
+          <div class="form-group">
+            <label for="id_username">Nombre de usuario</label>
+            <input type="text" name="username" required />
+          </div>
+
+          <div class="form-group">
+            <label for="id_email">Email</label>
+            <input type="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="id_password1">Contraseña</label>
+            <input type="password" name="password1" required />
+
+            <span class="helptext"
+              >La contraseña debe tener al menos 8 caracteres.</span
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="id_password2">Confirmar contraseña</label>
+            <input type="password" name="password2" required />
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="next-btn" data-next="tab-personal">
+              Siguiente
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 2: PERSONAL DATA -->
+        <div class="tab-content" id="tab-personal">
+          <div class="form-group">
+            <label for="id_first_name">Nombres</label>
+            <input type="text" name="first_name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="id_last_name">Apellidos</label>
+            <input type="text" name="last_name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="id_address">Dirección de residencia</label>
+            <input type="text" name="street_address" required />
+          </div>
+
+          <div class="form-group">
+            <label for="id_phone">Número de celular</label>
+            <input type="text" name="phone_number" required />
+          </div>
+
+          <div class="form-group">
+            <label for="id_birthdate">Fecha de nacimiento</label>
+            <input type="date" name="date_of_birth" required />
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="prev-btn" data-prev="tab-account">
+              Anterior
+            </button>
+            <button type="button" class="next-btn" data-next="tab-interests">
+              Siguiente
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 3: INTERESTS -->
+        <div class="tab-content" id="tab-interests">
+          <label>Selecciona al menos 3 intereses</label>
+          <div class="interests-container">
+            <div class="interest-bubble" data-interest="AAPL">Apple Inc.</div>
+            <div class="interest-bubble" data-interest="VNM">
+              VanEck Vietnam ETF
+            </div>
+            <div class="interest-bubble" data-interest="CBOE">
+              Cboe Global Markets, Inc.
+            </div>
+            <div class="interest-bubble" data-interest="MSFT">
+              Microsoft Corporation
+            </div>
+            <div class="interest-bubble" data-interest="MSBI">
+              Midland States Bancorp, Inc.
+            </div>
+            <div class="interest-bubble" data-interest="MRX">
+              Marex Group plc
+            </div>
+            <div class="interest-bubble" data-interest="MRVI">
+              Maravai LifeSciences Holdings, Inc.
+            </div>
+            <div class="interest-bubble" data-interest="ARDX">
+              Ardelyx, Inc.
+            </div>
+          </div>
+
+          <div class="interest-count">
+            <span id="selected-count">0</span> de 3 intereses seleccionados
+          </div>
+
+          <input type="hidden" name="interest1" />
+
+          <input type="hidden" name="interest2" />
+
+          <input type="hidden" name="interest3" />
+
+          <div class="button-group">
+            <button type="button" class="prev-btn" data-prev="tab-personal">
+              Anterior
+            </button>
+            <button type="submit" class="submit-btn" id="submit-btn">
+              Registrarse
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Tab navigation
+        const tabs = document.querySelectorAll(".tab-btn");
+        const tabContents = document.querySelectorAll(".tab-content");
+        const progressBar = document.getElementById("progress");
+        const nextButtons = document.querySelectorAll(".next-btn");
+        const prevButtons = document.querySelectorAll(".prev-btn");
+        const interestBubbles = document.querySelectorAll(".interest-bubble");
+        const selectedCountEl = document.getElementById("selected-count");
+        const submitBtn = document.getElementById("submit-btn");
+
+        const interest1Input = document.querySelector(
+          "input[name='interest1']"
+        );
+        const interest2Input = document.querySelector(
+          "input[name='interest2']"
+        );
+        const interest3Input = document.querySelector(
+          "input[name='interest3']"
+        );
+
+        // Set active tab function
+        function setActiveTab(targetId) {
+          tabs.forEach((tab) => tab.classList.remove("active"));
+          tabContents.forEach((content) => content.classList.remove("active"));
+
+          const targetTab = document.querySelector(
+            `[data-target="${targetId}"]`
+          );
+          const targetContent = document.getElementById(targetId);
+
+          targetTab.classList.add("active");
+          targetContent.classList.add("active");
+
+          if (targetId === "tab-account") {
+            progressBar.style.width = "33.33%";
+          } else if (targetId === "tab-personal") {
+            progressBar.style.width = "66.66%";
+            tabs[0].classList.add("completed");
+          } else if (targetId === "tab-interests") {
+            progressBar.style.width = "100%";
+            tabs[1].classList.add("completed");
+          }
+        }
+
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            setActiveTab(tab.dataset.target);
+          });
+        });
+
+        nextButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            setActiveTab(button.dataset.next);
+          });
+        });
+
+        prevButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            setActiveTab(button.dataset.prev);
+          });
+        });
+
+        // Interest selection
+        let selectedInterests = [];
+
+        interestBubbles.forEach((bubble) => {
+          bubble.addEventListener("click", () => {
+            const interest = bubble.dataset.interest;
+
+            if (bubble.classList.contains("selected")) {
+              bubble.classList.remove("selected");
+              selectedInterests = selectedInterests.filter(
+                (item) => item !== interest
+              );
+            } else {
+              if (selectedInterests.length < 3) {
+                bubble.classList.add("selected");
+                selectedInterests.push(interest);
+              }
+            }
+
+            selectedCountEl.textContent = selectedInterests.length;
+
+            // Llenar inputs ocultos
+            interest1Input.value = selectedInterests[0] || "";
+            interest2Input.value = selectedInterests[1] || "";
+            interest3Input.value = selectedInterests[2] || "";
+
+            // Validar cantidad
+            const interestCount = document.querySelector(".interest-count");
+            if (selectedInterests.length < 3) {
+              interestCount.classList.add("count-error");
+              submitBtn.disabled = true;
+            } else {
+              interestCount.classList.remove("count-error");
+              submitBtn.disabled = false;
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>

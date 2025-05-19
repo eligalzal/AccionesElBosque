@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
+from .logging import LOGGING
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,10 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--8dj%bxotzjd-%kihf$(t69h5(b@w-*u$br%@k8^rehy3i4jle'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.accounts',
     'apps.dashboard',
-    'apps.logs',
     'apps.trading',
 ]
 
@@ -125,32 +125,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '[{asctime}] {levelname} {name} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/plataforma.log'),
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'plataforma': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
-}
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -160,9 +134,20 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-ALPACA_BROKER_API_KEY = "CK3NSXJO7S87RLX019YI"
-ALPACA_BROKER_SECRET_KEY = "WWesdMf50rl9cNFDNaYGUd3Q4YLcyx62RzDeBwhB"
+ALPACA_BROKER_API_KEY = config("ALPACA_BROKER_API_KEY")
+ALPACA_BROKER_SECRET_KEY = config("ALPACA_BROKER_SECRET_KEY")
 
+ADMINS = [("Eliana", config('ADMINS'))]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_BACKEND = 'apps.backends.email_backend.EmailBackend'

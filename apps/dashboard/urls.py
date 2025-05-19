@@ -1,9 +1,6 @@
 from django.urls import path
-from django.http import HttpResponse
-
-def test_view(request):
-    return HttpResponse("¡Funciona!")
+from . import views
 
 urlpatterns = [
-    path('', test_view),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

@@ -1,10 +1,656 @@
+<!--<h2>Perfil de {{ request.session.username }}</h2> -->
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Perfil de usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Trading</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+      .spending-section {
+        background: var(--light-accent);
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+      }
+
+      .spending-title {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+      }
+
+      .donut-chart {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        position: relative;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--gold-accent) 0% 40%,
+          var(--light-accent) 40% 100%
+        );
+      }
+
+      .donut-inner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        background: var(--light-accent);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .donut-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--gold-accent);
+      }
+
+      .donut-label {
+        font-size: 0.75rem;
+        color: var(--text-color);
+      }
+      :root {
+        --dark-bg: #0d0d18;
+        --gold-accent:rgba(245, 203, 134, 0.76);
+        --dark-accent: #16161f;
+        --light-accent: #1e1e2d;
+        --text-color: #8a8a9e;
+        --shadow-darkrgb(163, 163, 189)f;
+        --shadow-light: #14141f;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+font-family: 'Quicksand', serif;
+      }
+
+      body {
+        background-color: var(--dark-bg);
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        padding: 20px;
+      }
+
+      .container {
+        display: flex;
+        width: 100%;
+        gap: 20px;
+      }
+
+      .sidebar {
+        width: 80px;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 24px;
+        background: #0d0d18;
+        box-shadow:  20px 20px 18px #07070c,
+             -20px -20px 18px #131324;
+      }
+
+  .logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+  width: 50px;
+  height: 50px;
+  padding: 1rem;
+ 
+  color: rgb(110, 85, 34); /* o el color de tu marca */
+  font-size: 2.5rem;
+  transition: all 0.3s ease;
+  border-radius: 17px;
+background: linear-gradient(145deg, rgb(19, 16, 12), rgb(36, 31, 24));
+box-shadow:  5px 5px 7px #07070d,
+             -5px -5px 7px #131323;
+}
+.logo-icon {
+  margin-bottom: 3rem;
+  color: var(--text-color);
+}
+      .menu-item {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 62px;
+background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+box-shadow:  8px 8px 16px #07070d,
+             -8px -8px 16px #131323;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--gold-accent);
+}
+
+.menu-item:hover {
+  box-shadow: inset 8px 8px 16px #07070d,
+            inset -8px -8px 16px #131323;
+  color:rgb(43, 45, 30);
+}
+
+.menu-item.active {
+  
+box-shadow: inset 8px 8px 16px #07070d,
+            inset -8px -8px 16px #131323;
+  color: rgb(56, 61, 21);
+}
+
+
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        
+        border-radius: 24px;
+background: #0d0d18;
+box-shadow: inset 21px 21px 42px #090910,
+            inset -21px -21px 42px #111120;
+            
+            }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 15px;
+        background: var(--light-accent);
+        border-radius: 40px;
+        cursor: pointer;
+      }
+
+      .user-profile img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .main-content {
+        flex: 1;
+
+        padding: 25px;
+        border-radius: 24px;
+        background: #0d0d18;
+        box-shadow: inset 20px 20px 18px #07070c,
+            inset -20px -20px 18px #131324;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .balance-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+
+      .balance {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+
+      .balance-trend {
+        margin-left: 15px;
+        color: #4caf50;
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+
+      .time-filter {
+        display: flex;
+        background: var(--light-accent);
+        border-radius: 30px;
+        overflow: hidden;
+        margin-left: auto;
+      }
+
+      .time-option {
+        padding: 8px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .time-option.active {
+        background: var(--gold-accent);
+        color: var(--dark-bg);
+        font-weight: 500;
+      }
+
+      .chart-section {
+        height: 250px;
+        margin: 30px 0;
+        position: relative;
+      }
+
+      .chart-container {
+        height: 100%;
+        width: 100%;
+        position: relative;
+      }
+
+      .market-summary {
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+
+      .market-summary h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+        color: var(--text-color);
+      }
+
+      .market-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+      }
+
+      .market-item {
+        background: var(--light-accent);
+        border-radius: 12px;
+        padding: 15px;
+      }
+
+      .market-name {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        margin-bottom: 8px;
+      }
+
+      .market-value {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      .market-change {
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .market-change.positive {
+        color: #4caf50;
+      }
+
+      .market-change.negative {
+        color: #f44336;
+      }
+
+      .dashboard-sections {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 25px;
+        margin-top: 30px;
+      }
+
+      .top-movers {
+        background: var(--light-accent);
+        border-radius: 15px;
+        padding: 20px;
+      }
+
+      .top-movers h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        color: var(--text-color);
+      }
+
+      .mover-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--dark-accent);
+      }
+
+      .mover-item:last-child {
+        border-bottom: none;
+      }
+
+      .mover-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-weight: 600;
+        margin-right: 15px;
+      }
+
+      .mover-details {
+        flex: 1;
+      }
+
+      .mover-name {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+      }
+
+      .mover-price {
+        font-size: 0.8rem;
+        color: var(--text-color);
+      }
+
+      .mover-change {
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 20px;
+      }
+
+      .mover-item.positive .mover-change {
+        color: #4caf50;
+        background: rgba(76, 175, 80, 0.1);
+      }
+
+      .mover-item.negative .mover-change {
+        color: #f44336;
+        background: rgba(244, 67, 54, 0.1);
+      }
+
+      .watchlist-section {
+        width: 300px;
+        background: var(--dark-accent);
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 5px 5px 10px var(--shadow-dark),
+          -5px -5px 10px var(--shadow-light);
+      }
+
+      .watchlist-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .watchlist-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      .watchlist-filter {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+        color: var(--text-color);
+        cursor: pointer;
+      }
+
+      .stock-item {
+        background: var(--light-accent);
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .stock-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .stock-logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .stock-details {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stock-symbol {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .stock-name {
+        font-size: 0.75rem;
+        color: var(--text-color);
+      }
+
+      .stock-price-info {
+        text-align: right;
+      }
+
+      .stock-price {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .stock-change {
+        font-size: 0.75rem;
+      }
+
+      .stock-change.positive {
+        color: #4caf50;
+      }
+
+      .stock-change.negative {
+        color: #f44336;
+      }
+
+      .toggle-switch {
+        position: relative;
+        width: 40px;
+        height: 20px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: var(--dark-accent);
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: var(--text-color);
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .toggle-slider {
+        background-color: var(--gold-accent);
+      }
+
+      input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+        background-color: var(--dark-bg);
+      }
+    </style>
   </head>
   <body>
-    <h2>Perfil de usuario</h2>
+    <div class="container">
+      <div class="sidebar">
+    <svg xmlns="http://www.w3.org/2000/svg" class="logo-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M7 20h10" />
+  <path d="M10 20c5.5-2.5.8-6.4 3-10" />
+  <path d="M9.5 9.4C8.6 6.5 5.3 5.4 2.4 6.3c.9 2.9 4.2 4 7.1 3.1Z" />
+  <path d="M14.5 6.4c.9-2.9 4.2-4 7.1-3.1-.9 2.9-4.2 4-7.1 3.1Z" />
+</svg>
+  <div class="main-menu">
+          <div class="menu-item active" data-tab="dashboard">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="menu-item" data-tab="news">
+            <i class="far fa-newspaper"></i>
+          </div>
+          <div class="menu-item" data-tab="portfolio">
+            <i class="fas fa-briefcase"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="header">
+          <div class="section-title">Bienvenido, {{ request.session.username }}</div>
+          <div class="menu-item" data-tab="profile">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+
+        <div class="main-content">
+          <!-- Tab de Dashboard -->
+          <div class="tab-content" id="dashboard">
+            <div class="balance-section">
+              <div class="balance">$2,420.10</div>
+              <div class="balance-trend">
+                <i class="fas fa-caret-up"></i> 2.6% ($422)
+              </div>
+              <div class="time-filter">
+                <div class="time-option">Día</div>
+                <div class="time-option">Semana</div>
+                <div class="time-option active">Mes</div>
+                <div class="time-option">Total</div>
+              </div>
+            </div>
+
+            <div class="chart-section">
+              <canvas id="marketChart" width="400" height="200"></canvas>
+            </div>
+
+            <div class="market-summary">
+              <h3>Resumen del Mercado</h3>
+              <div class="market-grid">
+                <div class="market-item">
+                  <div class="market-name">S&P 500</div>
+                  <div class="market-value">4,782.76</div>
+                  <div class="market-change positive">+0.82%</div>
+                </div>
+                <div class="market-item">
+                  <div class="market-name">NASDAQ</div>
+                  <div class="market-value">16,943.28</div>
+                  <div class="market-change positive">+1.14%</div>
+                </div>
+                <div class="market-item">
+                  <div class="market-name">DOW JONES</div>
+                  <div class="market-value">38,542.18</div>
+                  <div class="market-change positive">+0.56%</div>
+                </div>
+                <div class="market-item">
+                  <div class="market-name">BTC/USD</div>
+                  <div class="market-value">$68,412.45</div>
+                  <div class="market-change negative">-2.31%</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-sections">
+              <div class="spending-section">
+                <div class="spending-title">Saldo disponible</div>
+                <div class="donut-chart">
+                  <div class="donut-inner">
+                    <div class="donut-value">$950</div>
+                    <div class="donut-label">Buying power</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="top-movers">
+                <h3>Top Movers</h3>
+                <div class="mover-item positive">
+                  <div class="mover-icon" style="background-color: #4c9d64">
+                    NVDA
+                  </div>
+                  <div class="mover-details">
+                    <div class="mover-name">NVIDIA Corp.</div>
+                    <div class="mover-price">$875.22</div>
+                  </div>
+                  <div class="mover-change">+4.78%</div>
+                </div>
+                <div class="mover-item positive">
+                  <div class="mover-icon" style="background-color: #e2504c">
+                    TSLA
+                  </div>
+                  <div class="mover-details">
+                    <div class="mover-name">Tesla Inc.</div>
+                    <div class="mover-price">$780.45</div>
+                  </div>
+                  <div class="mover-change">+3.25%</div>
+                </div>
+                <div class="mover-item negative">
+                  <div class="mover-icon" style="background-color: #7d7d7d">
+                    AAPL
+                  </div>
+                  <div class="mover-details">
+                    <div class="mover-name">Apple Inc.</div>
+                    <div class="mover-price">$172.56</div>
+                  </div>
+                  <div class="mover-change">-1.42%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+      </div>
+    </div>
   </body>
 </html>

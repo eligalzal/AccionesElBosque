@@ -1,10 +1,187 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login</title>
-  </head>
-  <body>
-    <h2>Login de usuario</h2>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #0d0d18;
+            padding: 20px;
+        }
+        
+        .container {
+            position: relative;
+            width: 360px;
+            height: 500px;
+            perspective: 1000px;
+        }
+        
+        .form_front, .form_back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: #0d0d18;
+            border-radius: 16px;
+            padding: 30px;
+            transition: transform 0.8s ease;
+            box-shadow: 8px 8px 16px #07070e,
+                      -8px -8px 16px #131322;
+        }
+        
+        .form_front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+        
+        .form_back {
+            transform: rotateY(180deg);
+        }
+        
+        .container.flip .form_front {
+            transform: rotateY(-180deg);
+        }
+        
+        .container.flip .form_back {
+            transform: rotateY(0deg);
+        }
+        
+        .form_details {
+            font-size: 24px;
+            font-weight: 600;
+            color: #f5cb86;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px #07070e;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background-color: #0d0d18;
+            box-shadow: inset 5px 5px 10px #07070e,
+                        inset -5px -5px 10px #131322;
+            color: #f5cb86;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .input::placeholder {
+            color: #8a7a5c;
+        }
+        
+        .input:focus {
+            box-shadow: inset 3px 3px 6px #07070e,
+                        inset -3px -3px 6px #131322;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background-color: #0d0d18;
+            box-shadow: 5px 5px 10px #07070e,
+                      -5px -5px 10px #131322;
+            color: #f5cb86;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background-color: #f5cb86;
+            color: #0d0d18;
+            box-shadow: 3px 3px 6px #07070e,
+                      -3px -3px 6px #131322;
+        }
+        
+        .btn:active {
+            box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4),
+                        inset -3px -3px 6px rgba(255, 255, 255, 0.05);
+        }
+        
+        .switch {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #8a7a5c;
+            font-size: 14px;
+        }
+        
+        .signup_tog {
+            color: #f5cb86;
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .signup_tog:hover {
+            color: #fff;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container" id="form-container">
+        <div class="form_front">
+            <div class="form_details">Iniciar Sesión</div>
+            
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input placeholder="Nombre de usuario" class="input" type="text" name="username" required />
+                <input placeholder="Contraseña" class="input" type="password" name="password" required />
+                <button class="btn" type="submit">Ingresar</button>
+                <span class="switch">
+                    ¿No tienes una cuenta?
+                    <span action="{% url 'register' %}" class="signup_tog" id="show-signup">Regístrate</span>
+                </span>
+            </form>
+        </div>
+        
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('form-container');
+            const showSignup = document.getElementById('show-signup');
+            const showLogin = document.getElementById('show-login');
+         
+            
+            // Toggle between login and signup forms
+            showSignup.addEventListener('click', function() {
+                container.classList.add('flip');
+            });
+            
+            showLogin.addEventListener('click', function() {
+                container.classList.remove('flip');
+            });
+            
+            
+        });
+    </script>
+</body>
 </html>
