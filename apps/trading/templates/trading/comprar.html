@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprar Acción</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Quicksand", sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      form {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 400px;
+        margin: auto;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Comprar acción</h2>
+    <form method="post">
+      {% csrf_token %}
+
+      <label for="symbol">Símbolo:</label>
+      <input
+        type="text"
+        id="symbol"
+        name="symbol"
+        value="{{ symbol_prefill }}"
+        required
+      />
+
+      <label for="qty">Cantidad:</label>
+      <input type="number" id="qty" name="qty" min="1" required />
+
+      <button type="submit">
+        <i class="fas fa-shopping-cart"></i> Comprar
+      </button>
+    </form>
+  </body>
+</html>

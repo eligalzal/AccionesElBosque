@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resultado de la Orden</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <h2>Tu Portafolio</h2>
+    <table border="1">
+      <tr>
+        <th>Símbolo</th>
+        <th>Cantidad</th>
+        <th>Precio Actual</th>
+        <th>Valor Total</th>
+        <th>Acción</th>
+      </tr>
+      {% for item in portafolio %}
+      <tr>
+        <td>{{ item.symbol }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>{{ item.precio_actual }}</td>
+        <td>{{ item.valor_total }}</td>
+        <td>
+          <form method="post" action="{% url 'vender' %}">
+            {% csrf_token %}
+            <input type="hidden" name="symbol" value="{{ item.symbol }}" />
+            <input
+              type="number"
+              name="qty"
+              min="1"
+              max="{{ item.cantidad }}"
+              value="1"
+              required
+            />
+            <button type="submit">Vender</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

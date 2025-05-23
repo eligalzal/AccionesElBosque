@@ -147,6 +147,14 @@
     </style>
 </head>
 <body>
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li class="{{ message.tags }}">{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
     <div class="container" id="form-container">
         <div class="form_front">
             <div class="form_details">Iniciar Sesión</div>

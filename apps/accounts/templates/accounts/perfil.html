@@ -1,83 +1,57 @@
 <!--<h2>Perfil de {{ request.session.username }}</h2> -->
+<!--{% if request.GET.pago == 'exitoso' %}
+    <p style="color:green;">✅ ¡Pago exitoso!</p>
+{% elif request.GET.pago == 'cancelado' %}
+    <p style="color:red;">❌ Pago cancelado.</p>
+{% endif %}
+
+<form action="#" method="POST">
+  {% csrf_token %}
+  <button type="submit">Pagar Suscripción</button>
+</form>-->
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard de Trading</title>
+    <title>Gestión de Perfil de Usuario</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      .spending-section {
-        background: var(--light-accent);
-        border-radius: 15px;
-        padding: 20px;
-        text-align: center;
-        position: relative;
-      }
-
-      .spending-title {
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        margin-bottom: 15px;
-      }
-
-      .donut-chart {
-        width: 150px;
-        height: 150px;
-        margin: 0 auto;
-        position: relative;
-        border-radius: 50%;
-        background: conic-gradient(
-          var(--gold-accent) 0% 40%,
-          var(--light-accent) 40% 100%
-        );
-      }
-
-      .donut-inner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100px;
-        height: 100px;
-        background: var(--light-accent);
-        border-radius: 50%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .donut-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--gold-accent);
-      }
-
-      .donut-label {
-        font-size: 0.75rem;
-        color: var(--text-color);
-      }
       :root {
         --dark-bg: #0d0d18;
-        --gold-accent:rgba(245, 203, 134, 0.76);
-        --dark-accent: #16161f;
+        --gold-accent: rgba(245, 203, 134, 0.76);
+        --dark-accent: rgb(6, 6, 12);
         --light-accent: #1e1e2d;
         --text-color: #8a8a9e;
-        --shadow-darkrgb(163, 163, 189)f;
-        --shadow-light: #14141f;
+        --primary: #6d9eeb;
+        --success: #69db7c;
+        --danger: #ff6b6b;
+        --shadow-dark: #07070d;
+        --shadow-light: #131324;
+        --small-radius: 8px;
+        --bg: #0d0d18;
+        --background: #0d0d18;
+        --card-radius: 12px;
+        --light: #1a1a2e;
+        --dark: #06060c;
+        --text: #eaeaea;
+        --radius: 1rem;
+        --transition: 0.4s ease;
+        --purple: rgba(225, 107, 255, , 0.82);
       }
 
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-font-family: 'Quicksand', serif;
+        font-family: "Quicksand", sans-serif;
       }
 
       body {
@@ -94,6 +68,7 @@ font-family: 'Quicksand', serif;
         gap: 20px;
       }
 
+      /* Sidebar estilos */
       .sidebar {
         width: 80px;
         padding: 20px 0;
@@ -102,60 +77,51 @@ font-family: 'Quicksand', serif;
         align-items: center;
         border-radius: 24px;
         background: #0d0d18;
-        box-shadow:  20px 20px 18px #07070c,
-             -20px -20px 18px #131324;
+        box-shadow: 20px 20px 18px #07070c, -20px -20px 18px #131324;
       }
 
-  .logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 3rem;
-  width: 50px;
-  height: 50px;
-  padding: 1rem;
- 
-  color: rgb(110, 85, 34); /* o el color de tu marca */
-  font-size: 2.5rem;
-  transition: all 0.3s ease;
-  border-radius: 17px;
-background: linear-gradient(145deg, rgb(19, 16, 12), rgb(36, 31, 24));
-box-shadow:  5px 5px 7px #07070d,
-             -5px -5px 7px #131323;
-}
-.logo-icon {
-  margin-bottom: 3rem;
-  color: var(--text-color);
-}
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 3rem;
+        width: 50px;
+        height: 50px;
+        padding: 1rem;
+        color: rgb(110, 85, 34);
+        font-size: 2.5rem;
+        transition: all 0.3s ease;
+        border-radius: 17px;
+        background: linear-gradient(145deg, rgb(19, 16, 12), rgb(36, 31, 24));
+        box-shadow: 5px 5px 7px #07070d, -5px -5px 7px #131323;
+      }
+
       .menu-item {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 62px;
-background: linear-gradient(145deg, #0e0e1a, #0c0c16);
-box-shadow:  8px 8px 16px #07070d,
-             -8px -8px 16px #131323;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: var(--gold-accent);
-}
+        margin-bottom: 2rem;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 62px;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        box-shadow: 8px 8px 16px #07070d, -8px -8px 16px #131323;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--gold-accent);
+      }
 
-.menu-item:hover {
-  box-shadow: inset 8px 8px 16px #07070d,
-            inset -8px -8px 16px #131323;
-  color:rgb(43, 45, 30);
-}
+      .menu-item:hover {
+        box-shadow: inset 8px 8px 16px #07070d, inset -8px -8px 16px #131323;
+        color: rgb(43, 45, 30);
+      }
 
-.menu-item.active {
-  
-box-shadow: inset 8px 8px 16px #07070d,
-            inset -8px -8px 16px #131323;
-  color: rgb(56, 61, 21);
-}
+      .menu-item.active {
+        box-shadow: inset 8px 8px 16px #07070d, inset -8px -8px 16px #131323;
+        color: rgb(56, 61, 21);
+      }
 
-
+      /* Contenido principal */
       .content {
         flex: 1;
         display: flex;
@@ -163,328 +129,142 @@ box-shadow: inset 8px 8px 16px #07070d,
         gap: 20px;
       }
 
+      /* Header */
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 15px 25px;
-        
         border-radius: 24px;
-background: #0d0d18;
-box-shadow: inset 21px 21px 42px #090910,
-            inset -21px -21px 42px #111120;
-            
-            }
+        background: #0d0d18;
+        box-shadow: inset 21px 21px 42px #090910, inset -21px -21px 42px #111120;
+      }
 
       .section-title {
-        font-size: 1.5rem;
-        font-weight: 600;
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
       }
 
-      .user-profile {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 15px;
-        background: var(--light-accent);
-        border-radius: 40px;
-        cursor: pointer;
-      }
-
-      .user-profile img {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
+      /* Main Content */
       .main-content {
         flex: 1;
-
         padding: 25px;
         border-radius: 24px;
         background: #0d0d18;
-        box-shadow: inset 20px 20px 18px #07070c,
-            inset -20px -20px 18px #131324;
+        box-shadow: inset 20px 20px 18px #07070c, inset -20px -20px 18px #131324;
+        overflow: auto;
       }
 
+      /* Tabs de navegación */
+      .profile-tabs {
+        display: flex;
+        margin-bottom: 30px;
+        border-bottom: 1px solid #151529;
+        gap: 5px;
+      }
+
+      .tab-button {
+        padding: 12px 20px;
+        background: transparent;
+        border: none;
+        color: var(--text-color);
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      .tab-button:hover {
+        color: var(--gold-accent);
+      }
+
+      .tab-button.active {
+        color: var(--gold-accent);
+        border-bottom: 3px solid var(--gold-accent);
+      }
+
+      /* Contenedor de la pestaña */
       .tab-content {
         display: none;
       }
 
       .tab-content.active {
         display: block;
+        animation: fadeIn 0.5s ease;
       }
 
-      .balance-section {
-        display: flex;
-        align-items: center;
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Tarjetas para secciones */
+      .profile-card {
+        background-color: var(--background);
+        border-radius: var(--card-radius);
+        padding: 25px;
         margin-bottom: 25px;
-      }
-
-      .balance {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--text-color);
-      }
-
-      .balance-trend {
-        margin-left: 15px;
-        color: #4caf50;
-        display: flex;
-        align-items: center;
-        font-size: 0.9rem;
-      }
-
-      .time-filter {
-        display: flex;
-        background: var(--light-accent);
-        border-radius: 30px;
-        overflow: hidden;
-        margin-left: auto;
-      }
-
-      .time-option {
-        padding: 8px 20px;
-        cursor: pointer;
+        box-shadow: 8px 8px 16px var(--shadow-dark),
+          -8px -8px 16px var(--shadow-light);
         transition: all 0.3s ease;
       }
 
-      .time-option.active {
-        background: var(--gold-accent);
-        color: var(--dark-bg);
-        font-weight: 500;
+      .profile-card:hover {
+        box-shadow: 10px 10px 20px var(--shadow-dark),
+          -10px -10px 20px var(--shadow-light);
       }
 
-      .chart-section {
-        height: 250px;
-        margin: 30px 0;
-        position: relative;
-      }
-
-      .chart-container {
-        height: 100%;
-        width: 100%;
-        position: relative;
-      }
-
-      .market-summary {
-        margin-top: 30px;
-        margin-bottom: 30px;
-      }
-
-      .market-summary h3 {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-        color: var(--text-color);
-      }
-
-      .market-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-      }
-
-      .market-item {
-        background: var(--light-accent);
-        border-radius: 12px;
-        padding: 15px;
-      }
-
-      .market-name {
-        font-size: 0.8rem;
-        color: var(--text-color);
-        margin-bottom: 8px;
-      }
-
-      .market-value {
-        font-size: 1.2rem;
+      .card-title {
+        font-size: 18px;
         font-weight: 600;
-        margin-bottom: 5px;
-      }
-
-      .market-change {
-        font-size: 0.9rem;
-        font-weight: 500;
-      }
-
-      .market-change.positive {
-        color: #4caf50;
-      }
-
-      .market-change.negative {
-        color: #f44336;
-      }
-
-      .dashboard-sections {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 25px;
-        margin-top: 30px;
-      }
-
-      .top-movers {
-        background: var(--light-accent);
-        border-radius: 15px;
-        padding: 20px;
-      }
-
-      .top-movers h3 {
-        font-size: 1.1rem;
-        margin-bottom: 15px;
-        color: var(--text-color);
-      }
-
-      .mover-item {
+        color: var(--text);
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid var(--dark-accent);
+        gap: 10px;
       }
 
-      .mover-item:last-child {
-        border-bottom: none;
+      .card-title i {
+        color: var(--gold-accent);
       }
 
-      .mover-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-weight: 600;
-        margin-right: 15px;
-      }
-
-      .mover-details {
-        flex: 1;
-      }
-
-      .mover-name {
-        font-size: 0.9rem;
-        margin-bottom: 4px;
-      }
-
-      .mover-price {
-        font-size: 0.8rem;
-        color: var(--text-color);
-      }
-
-      .mover-change {
-        font-weight: 600;
-        padding: 5px 10px;
-        border-radius: 20px;
-      }
-
-      .mover-item.positive .mover-change {
-        color: #4caf50;
-        background: rgba(76, 175, 80, 0.1);
-      }
-
-      .mover-item.negative .mover-change {
-        color: #f44336;
-        background: rgba(244, 67, 54, 0.1);
-      }
-
-      .watchlist-section {
-        width: 300px;
-        background: var(--dark-accent);
-        border-radius: 18px;
-        padding: 25px;
-        box-shadow: 5px 5px 10px var(--shadow-dark),
-          -5px -5px 10px var(--shadow-light);
-      }
-
-      .watchlist-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      /* Campos del formulario */
+      .form-group {
         margin-bottom: 20px;
       }
 
-      .watchlist-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-      }
-
-      .watchlist-filter {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 0.85rem;
-        color: var(--text-color);
-        cursor: pointer;
-      }
-
-      .stock-item {
-        background: var(--light-accent);
-        border-radius: 12px;
-        padding: 15px;
-        margin-bottom: 12px;
+      .form-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 15px;
       }
 
-      .stock-info {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+      .form-control {
+        flex: 1;
+        min-width: 250px;
       }
 
-      .stock-logo {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 0.75rem;
-        font-weight: 600;
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text);
       }
 
-      .stock-details {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .stock-symbol {
-        font-weight: 600;
-        font-size: 0.9rem;
-      }
-
-      .stock-name {
-        font-size: 0.75rem;
-        color: var(--text-color);
-      }
-
-      .stock-price-info {
-        text-align: right;
-      }
-
-      .stock-price {
-        font-weight: 600;
-        font-size: 0.9rem;
-      }
-
-      .stock-change {
-        font-size: 0.75rem;
-      }
-
-      .stock-change.positive {
-        color: #4caf50;
-      }
-
-      .stock-change.negative {
-        color: #f44336;
-      }
-
+      /* Toggle Switch */
       .toggle-switch {
         position: relative;
-        width: 40px;
-        height: 20px;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
       }
 
       .toggle-switch input {
@@ -502,155 +282,1155 @@ box-shadow: inset 21px 21px 42px #090910,
         bottom: 0;
         background-color: var(--dark-accent);
         transition: 0.4s;
-        border-radius: 34px;
+        border-radius: 30px;
+        box-shadow: inset 2px 2px 5px var(--shadow-dark),
+          inset -2px -2px 5px var(--shadow-light);
       }
 
       .toggle-slider:before {
         position: absolute;
         content: "";
-        height: 16px;
-        width: 16px;
-        left: 2px;
-        bottom: 2px;
-        background-color: var(--text-color);
+        height: 22px;
+        width: 22px;
+        left: 4px;
+        bottom: 4px;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
         transition: 0.4s;
         border-radius: 50%;
+        box-shadow: 2px 2px 5px var(--shadow-dark),
+          -2px -2px 5px var(--shadow-light);
       }
 
       input:checked + .toggle-slider {
-        background-color: var(--gold-accent);
+        background-color: rgba(225, 107, 255, 0.3);
       }
 
       input:checked + .toggle-slider:before {
-        transform: translateX(20px);
-        background-color: var(--dark-bg);
+        transform: translateX(30px);
+        background: linear-gradient(145deg, #e16bff, #c25ce2);
+      }
+
+      /* Select personalizado */
+      .neomorphic-select {
+        position: relative;
+        width: 100%;
+      }
+
+      .neomorphic-select select {
+        appearance: none;
+        width: 100%;
+        padding: 12px 15px;
+        border: none;
+        border-radius: var(--small-radius);
+        background-color: var(--background);
+        color: var(--text-color);
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: inset 4px 4px 8px var(--shadow-dark),
+          inset -4px -4px 8px var(--shadow-light);
+        outline: none;
+      }
+
+      .neomorphic-select:after {
+        content: "\f107";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        color: var(--gold-accent);
+        pointer-events: none;
+      }
+
+      /* Input personalizado */
+      .neomorphic-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: none;
+        border-radius: var(--small-radius);
+        background-color: var(--background);
+        color: var(--text-color);
+        font-size: 16px;
+        box-shadow: inset 4px 4px 8px var(--shadow-dark),
+          inset -4px -4px 8px var(--shadow-light);
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      .neomorphic-input:focus {
+        box-shadow: inset 6px 6px 10px var(--shadow-dark),
+          inset -6px -6px 10px var(--shadow-light);
+      }
+
+      /* Estilo para etiquetas de suscripción */
+      .subscription-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        background: linear-gradient(
+          145deg,
+          rgba(225, 107, 255, 0.2),
+          rgba(225, 107, 255, 0.3)
+        );
+        color: rgba(225, 107, 255, 0.9);
+        border-radius: var(--small-radius);
+        font-size: 12px;
+        font-weight: 600;
+        margin-left: 10px;
+      }
+
+      /* Watchlist items */
+      .watchlist-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .watchlist-item {
+        background-color: var(--background);
+        border-radius: var(--small-radius);
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 4px 4px 8px var(--shadow-dark),
+          -4px -4px 8px var(--shadow-light);
+        transition: all 0.3s ease;
+      }
+
+      .watchlist-item:hover {
+        box-shadow: 6px 6px 12px var(--shadow-dark),
+          -6px -6px 12px var(--shadow-light);
+      }
+
+      .watchlist-stock-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .watchlist-stock-symbol {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .watchlist-stock-name {
+        font-size: 14px;
+        color: var(--text-color);
+      }
+
+      .watchlist-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .watchlist-action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        box-shadow: 4px 4px 8px var(--shadow-dark),
+          -4px -4px 8px var(--shadow-light);
+        border: none;
+        color: var(--gold-accent);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .watchlist-action-btn:hover {
+        box-shadow: inset 4px 4px 8px var(--shadow-dark),
+          inset -4px -4px 8px var(--shadow-light);
+        color: rgba(225, 107, 255, 0.82);
+      }
+
+      /* Botones */
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: var(--small-radius);
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-purple {
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        color: rgba(225, 107, 255, 0.82);
+        box-shadow: 6px 6px 12px var(--shadow-dark),
+          -6px -6px 12px var(--shadow-light);
+      }
+
+      .btn-purple:hover {
+        box-shadow: inset 4px 4px 8px var(--shadow-dark),
+          inset -4px -4px 8px var(--shadow-light);
+        color: rgba(225, 107, 255, 1);
+      }
+
+      .btn-gold {
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        color: var(--gold-accent);
+        box-shadow: 6px 6px 12px var(--shadow-dark),
+          -6px -6px 12px var(--shadow-light);
+      }
+
+      .btn-gold:hover {
+        box-shadow: inset 4px 4px 8px var(--shadow-dark),
+          inset -4px -4px 8px var(--shadow-light);
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      /* Slider para límites */
+      .range-slider {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .range-slider input {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 10px;
+        border-radius: 5px;
+        background: var(--dark-accent);
+        outline: none;
+        box-shadow: inset 2px 2px 5px var(--shadow-dark),
+          inset -2px -2px 5px var(--shadow-light);
+      }
+
+      .range-slider input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: linear-gradient(
+          145deg,
+          var(--gold-accent),
+          rgba(245, 203, 134, 0.9)
+        );
+        cursor: pointer;
+        box-shadow: 2px 2px 5px var(--shadow-dark),
+          -2px -2px 5px var(--shadow-light);
+      }
+
+      .range-value {
+        text-align: center;
+        font-weight: 600;
+        color: var(--gold-accent);
+        margin-top: 5px;
+      }
+
+      /* Modal para añadir watchlist */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        background-color: var(--background);
+        margin: 15% auto;
+        padding: 25px;
+        border-radius: var(--card-radius);
+        box-shadow: 8px 8px 16px var(--shadow-dark),
+          -8px -8px 16px var(--shadow-light);
+        width: 90%;
+        max-width: 500px;
+        animation: modalFadeIn 0.3s ease;
+      }
+
+      @keyframes modalFadeIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .close-modal {
+        font-size: 24px;
+        color: var(--text-color);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .close-modal:hover {
+        color: var(--danger);
+        transform: scale(1.1);
+      }
+
+      /* Usuario */
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+
+      .user-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        box-shadow: 8px 8px 16px var(--shadow-dark),
+          -8px -8px 16px var(--shadow-light);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 32px;
+        color: var(--gold-accent);
+      }
+
+      .user-details {
+        flex: 1;
+      }
+
+      .user-name {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 5px;
+      }
+
+      .user-email {
+        font-size: 14px;
+        color: var(--text-color);
+      }
+
+      .user-subscription {
+        font-size: 14px;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .subscription-type {
+        padding: 3px 10px;
+        background: linear-gradient(
+          145deg,
+          rgba(225, 107, 255, 0.2),
+          rgba(225, 107, 255, 0.3)
+        );
+        color: rgba(225, 107, 255, 0.9);
+        border-radius: var(--small-radius);
+        font-weight: 600;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          padding: 10px;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        .logo {
+          margin-bottom: 0;
+        }
+
+        .menu-items {
+          display: flex;
+          gap: 10px;
+        }
+
+        .menu-item {
+          margin-bottom: 0;
+        }
+
+        .form-row {
+          flex-direction: column;
+        }
+
+        .form-control {
+          min-width: 100%;
+        }
+      }
+
+      .user-balance {
+        margin-left: 20px;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        padding: 15px;
+        border-radius: var(--card-radius);
+        box-shadow: 6px 6px 12px var(--shadow-dark),
+          -6px -6px 12px var(--shadow-light);
+        min-width: 180px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .user-balance:hover {
+        box-shadow: 8px 8px 16px var(--shadow-dark),
+          -8px -8px 16px var(--shadow-light);
+        transform: translateY(-2px);
+      }
+
+      .balance-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .balance-title {
+        font-size: 14px;
+        color: var(--text-color);
+        margin-bottom: 5px;
+      }
+
+      .balance-amount {
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--gold-accent);
+        margin-bottom: 10px;
+      }
+
+      .balance-action {
+        font-size: 14px;
+        color: rgba(225, 107, 255, 0.82);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .balance-action i {
+        font-size: 16px;
+      }
+
+      /* Responsive para la sección de usuario y saldo */
+      @media (max-width: 768px) {
+        .user-info {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .user-balance {
+          margin-left: 0;
+          margin-top: 15px;
+          width: 100%;
+        }
       }
     </style>
   </head>
   <body>
     <div class="container">
+      <!-- Sidebar -->
       <div class="sidebar">
-    <svg xmlns="http://www.w3.org/2000/svg" class="logo-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M7 20h10" />
-  <path d="M10 20c5.5-2.5.8-6.4 3-10" />
-  <path d="M9.5 9.4C8.6 6.5 5.3 5.4 2.4 6.3c.9 2.9 4.2 4 7.1 3.1Z" />
-  <path d="M14.5 6.4c.9-2.9 4.2-4 7.1-3.1-.9 2.9-4.2 4-7.1 3.1Z" />
-</svg>
-  <div class="main-menu">
-          <div class="menu-item active" data-tab="dashboard">
-            <i class="fas fa-chart-line"></i>
-          </div>
-          <div class="menu-item" data-tab="news">
-            <i class="far fa-newspaper"></i>
-          </div>
-          <div class="menu-item" data-tab="portfolio">
-            <i class="fas fa-briefcase"></i>
-          </div>
+        <div class="logo">
+          <i class="fas fa-chart-line"></i>
         </div>
       </div>
 
+      <!-- Contenido principal -->
       <div class="content">
+        <!-- Header -->
         <div class="header">
-          <div class="section-title">Bienvenido, {{ request.session.username }}</div>
-          <div class="menu-item" data-tab="profile">
-            <i class="fas fa-user"></i>
-          </div>
+          <div class="section-title">Gestión de Perfil</div>
         </div>
 
+        <!-- Main Content -->
         <div class="main-content">
-          <!-- Tab de Dashboard -->
-          <div class="tab-content" id="dashboard">
-            <div class="balance-section">
-              <div class="balance">$2,420.10</div>
-              <div class="balance-trend">
-                <i class="fas fa-caret-up"></i> 2.6% ($422)
-              </div>
-              <div class="time-filter">
-                <div class="time-option">Día</div>
-                <div class="time-option">Semana</div>
-                <div class="time-option active">Mes</div>
-                <div class="time-option">Total</div>
+          <!-- Información de usuario -->
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="user-details">
+              <div class="user-name">{{ first_name }} {{ last_name }}</div>
+              <div class="user-email">{{ email }}</div>
+              <div class="user-subscription">
+                <span>Plan actual:</span>
+                <span class="subscription-type">{{ plan }}</span>
               </div>
             </div>
-
-            <div class="chart-section">
-              <canvas id="marketChart" width="400" height="200"></canvas>
-            </div>
-
-            <div class="market-summary">
-              <h3>Resumen del Mercado</h3>
-              <div class="market-grid">
-                <div class="market-item">
-                  <div class="market-name">S&P 500</div>
-                  <div class="market-value">4,782.76</div>
-                  <div class="market-change positive">+0.82%</div>
-                </div>
-                <div class="market-item">
-                  <div class="market-name">NASDAQ</div>
-                  <div class="market-value">16,943.28</div>
-                  <div class="market-change positive">+1.14%</div>
-                </div>
-                <div class="market-item">
-                  <div class="market-name">DOW JONES</div>
-                  <div class="market-value">38,542.18</div>
-                  <div class="market-change positive">+0.56%</div>
-                </div>
-                <div class="market-item">
-                  <div class="market-name">BTC/USD</div>
-                  <div class="market-value">$68,412.45</div>
-                  <div class="market-change negative">-2.31%</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="dashboard-sections">
-              <div class="spending-section">
-                <div class="spending-title">Saldo disponible</div>
-                <div class="donut-chart">
-                  <div class="donut-inner">
-                    <div class="donut-value">$950</div>
-                    <div class="donut-label">Buying power</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="top-movers">
-                <h3>Top Movers</h3>
-                <div class="mover-item positive">
-                  <div class="mover-icon" style="background-color: #4c9d64">
-                    NVDA
-                  </div>
-                  <div class="mover-details">
-                    <div class="mover-name">NVIDIA Corp.</div>
-                    <div class="mover-price">$875.22</div>
-                  </div>
-                  <div class="mover-change">+4.78%</div>
-                </div>
-                <div class="mover-item positive">
-                  <div class="mover-icon" style="background-color: #e2504c">
-                    TSLA
-                  </div>
-                  <div class="mover-details">
-                    <div class="mover-name">Tesla Inc.</div>
-                    <div class="mover-price">$780.45</div>
-                  </div>
-                  <div class="mover-change">+3.25%</div>
-                </div>
-                <div class="mover-item negative">
-                  <div class="mover-icon" style="background-color: #7d7d7d">
-                    AAPL
-                  </div>
-                  <div class="mover-details">
-                    <div class="mover-name">Apple Inc.</div>
-                    <div class="mover-price">$172.56</div>
-                  </div>
-                  <div class="mover-change">-1.42%</div>
+            <div class="user-balance">
+              <div class="balance-container" id="balanceContainer">
+                <div class="balance-title">Saldo disponible</div>
+                <div class="balance-amount">${{ saldo }}</div>
+                <div class="balance-action">
+                  <i class="fas fa-plus-circle"></i> Ingresar dinero
                 </div>
               </div>
             </div>
           </div>
-          
+
+          <!-- Tabs de navegación -->
+          <div class="profile-tabs">
+            <button class="tab-button active" data-tab="notifications">
+              Notificaciones
+            </button>
+            <button class="tab-button" data-tab="visualization">
+              Visualización del Portafolio
+            </button>
+            <button class="tab-button" data-tab="operations">
+              Configuración de Operaciones
+            </button>
+            <button class="tab-button" data-tab="watchlist">
+              Listas de Observación
+            </button>
+          </div>
+
+          <!-- Contenido de las tabs -->
+          <!-- Tab Notificaciones -->
+          <div id="notifications" class="tab-content active">
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-bell"></i> Notificaciones del Mercado
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Apertura y cierre de mercados</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Resumen diario de operaciones</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Confirmaciones de órdenes ejecutadas</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-bell-slash"></i> Alertas de precios específicos
+                <span class="subscription-badge">Premium</span>
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Activar alertas de precios personalizados</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label">Frecuencia de alertas</label>
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>Inmediata</option>
+                        <option>Cada hora</option>
+                        <option>Diaria</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-control">
+                    <label class="form-label">Método de notificación</label>
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>Email</option>
+                        <option>Push Notification</option>
+                        <option>SMS</option>
+                        <option>Todos</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Visualización del Portafolio -->
+          <div id="visualization" class="tab-content">
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-chart-pie"></i> Configuración de Visualización
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Tipo de visualización preferida</label
+                    >
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>Gráfico de barras</option>
+                        <option>Lista</option>
+                        <option>Vista detallada</option>
+                        <option>Gráfico circular</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-control">
+                    <label class="form-label">Orden predeterminado</label>
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>Por valor total</option>
+                        <option>Por porcentaje de ganancia/pérdida</option>
+                        <option>Alfabético</option>
+                        <option>Por fecha de adquisición</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Mostrar/ocultar activos con menor peso en el
+                      portafolio</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Umbral de visibilidad (% del portafolio)</label
+                    >
+                    <div class="range-slider">
+                      <input
+                        type="range"
+                        min="0"
+                        max="10"
+                        value="2"
+                        id="portfolioThreshold"
+                      />
+                      <div class="range-value">2%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-palette"></i> Personalización Visual
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label">Mostrar rendimiento total</label>
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Mostrar gráficos de rendimiento</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Periodo de tiempo predeterminado</label
+                    >
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>1 día</option>
+                        <option>1 semana</option>
+                        <option>1 mes</option>
+                        <option>3 meses</option>
+                        <option>1 año</option>
+                        <option>Todo</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Tab Configuración de Operaciones -->
+          <div id="operations" class="tab-content">
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-exchange-alt"></i> Configuración de Órdenes
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Tipo de orden predeterminado</label
+                    >
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>Market</option>
+                        <option>Limit</option>
+                        <option>Stop-Loss</option>
+                        <option>Trailing Stop</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Configurar órdenes automáticas</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-shield-alt"></i> Seguridad y Límites
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Límites de operaciones diarias</label
+                    >
+                    <div class="range-slider">
+                      <input
+                        type="range"
+                        min="1"
+                        max="50"
+                        value="10"
+                        id="dailyTradeLimit"
+                      />
+                      <div class="range-value">10 operaciones</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Configuración de seguridad adicional para órdenes
+                      grandes</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Umbral para autorización doble (% del portafolio)</label
+                    >
+                    <div class="range-slider">
+                      <input
+                        type="range"
+                        min="1"
+                        max="50"
+                        value="15"
+                        id="doubleAuthThreshold"
+                      />
+                      <div class="range-value">15%</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Método de autorización secundaria</label
+                    >
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>Código SMS</option>
+                        <option>Email de confirmación</option>
+                        <option>Aplicación de autenticación</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab Listas de Observación -->
+          <div id="watchlist" class="tab-content">
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-binoculars"></i> Mis Listas de Observación
+                <span class="subscription-badge">Premium</span>
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <button class="btn btn-purple" id="addWatchlistBtn">
+                      <i class="fas fa-plus"></i> Añadir Activo
+                    </button>
+                  </div>
+                </div>
+
+                <div class="watchlist-items">
+                  <!-- Item 1 -->
+                  <div class="watchlist-item">
+                    <div class="watchlist-stock-info">
+                      <div class="watchlist-stock-symbol">APPL</div>
+                      <div class="watchlist-stock-name">Apple Inc.</div>
+                    </div>
+                    <div class="watchlist-actions">
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-bell"></i>
+                      </button>
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Item 2 -->
+                  <div class="watchlist-item">
+                    <div class="watchlist-stock-info">
+                      <div class="watchlist-stock-symbol">MSFT</div>
+                      <div class="watchlist-stock-name">
+                        Microsoft Corporation
+                      </div>
+                    </div>
+                    <div class="watchlist-actions">
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-bell"></i>
+                      </button>
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Item 3 -->
+                  <div class="watchlist-item">
+                    <div class="watchlist-stock-info">
+                      <div class="watchlist-stock-symbol">GOOGL</div>
+                      <div class="watchlist-stock-name">Alphabet Inc.</div>
+                    </div>
+                    <div class="watchlist-actions">
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-bell"></i>
+                      </button>
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Item 4 -->
+                  <div class="watchlist-item">
+                    <div class="watchlist-stock-info">
+                      <div class="watchlist-stock-symbol">AMZN</div>
+                      <div class="watchlist-stock-name">Amazon.com Inc.</div>
+                    </div>
+                    <div class="watchlist-actions">
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-bell"></i>
+                      </button>
+                      <button class="watchlist-action-btn">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="profile-card">
+              <h3 class="card-title">
+                <i class="fas fa-cog"></i> Configuración de Alertas
+              </h3>
+
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label"
+                      >Notificar movimientos significativos</label
+                    >
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="form-control">
+                    <label class="form-label">Umbral de variación (%)</label>
+                    <div class="range-slider">
+                      <input
+                        type="range"
+                        min="1"
+                        max="20"
+                        value="5"
+                        id="variationThreshold"
+                      />
+                      <div class="range-value">5%</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label">Alertas de volumen inusual</label>
+                    <label class="toggle-switch">
+                      <input type="checkbox" checked />
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                  <div class="form-control">
+                    <label class="form-label">Frecuencia de comprobación</label>
+                    <div class="neomorphic-select">
+                      <select>
+                        <option>Tiempo real</option>
+                        <option>Cada 15 minutos</option>
+                        <option>Cada hora</option>
+                        <option>Diaria</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal para añadir watchlist -->
+          <div id="addWatchlistModal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Añadir a Lista de Observación</h3>
+                <span class="close-modal">&times;</span>
+              </div>
+              <div class="form-group">
+                <div class="form-row">
+                  <div class="form-control">
+                    <label class="form-label">Símbolo</label>
+                    <input
+                      type="text"
+                      class="neomorphic-input"
+                      placeholder="Ej. AAPL, MSFT"
+                    />
+                  </div>
+                </div>
+                <div class="form-actions">
+                  <button class="btn btn-gold">Cancelar</button>
+                  <button class="btn btn-purple">Añadir</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="depositModal" class="modal">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title">Ingresar dinero a tu cuenta</h3>
+                <span class="close-modal" id="closeDepositModal">&times;</span>
+              </div>
+              <form method="POST" id="depositForm">
+                {% csrf_token %}
+                <div class="form-group">
+                  <div class="form-row">
+                    <div class="form-control">
+                      <label class="form-label">Cantidad a ingresar</label>
+                      <input
+                        type="text"
+                        class="neomorphic-input"
+                        id="depositAmount"
+                        name="depositAmount"
+                        placeholder="Ej. 1000.00"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="form-actions">
+                    <button
+                      type="button"
+                      class="btn btn-gold"
+                      id="cancelDeposit"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      class="btn btn-purple"
+                      id="continueToStripe"
+                    >
+                      <i class="fas fa-credit-card"></i> Continuar al pago
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+    <!-- Scripts JavaScript para la funcionalidad -->
+    <script>
+      // Cambio de pestañas
+      document.querySelectorAll(".tab-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          // Desactivar todas las pestañas
+          document.querySelectorAll(".tab-button").forEach((btn) => {
+            btn.classList.remove("active");
+          });
+          document.querySelectorAll(".tab-content").forEach((content) => {
+            content.classList.remove("active");
+          });
+
+          // Activar la pestaña seleccionada
+          button.classList.add("active");
+          document
+            .getElementById(button.getAttribute("data-tab"))
+            .classList.add("active");
+        });
+      });
+
+      // Actualizar valores de los sliders
+      document
+        .getElementById("portfolioThreshold")
+        .addEventListener("input", function () {
+          this.nextElementSibling.textContent = this.value + "%";
+        });
+
+      document
+        .getElementById("dailyTradeLimit")
+        .addEventListener("input", function () {
+          this.nextElementSibling.textContent = this.value + " operaciones";
+        });
+
+      document
+        .getElementById("doubleAuthThreshold")
+        .addEventListener("input", function () {
+          this.nextElementSibling.textContent = this.value + "%";
+        });
+
+      document
+        .getElementById("variationThreshold")
+        .addEventListener("input", function () {
+          this.nextElementSibling.textContent = this.value + "%";
+        });
+
+      // Funcionalidad modal
+      const modal = document.getElementById("addWatchlistModal");
+      const btn = document.getElementById("addWatchlistBtn");
+      const span = document.getElementsByClassName("close-modal")[0];
+
+      btn.onclick = function () {
+        modal.style.display = "block";
+      };
+
+      span.onclick = function () {
+        modal.style.display = "none";
+      };
+
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+
+      // Funcionalidad del modal de ingreso de dinero
+      const depositModal = document.getElementById("depositModal");
+      const balanceContainer = document.getElementById("balanceContainer");
+      const closeDepositModal = document.getElementById("closeDepositModal");
+      const cancelDeposit = document.getElementById("cancelDeposit");
+      const continueToStripe = document.getElementById("continueToStripe");
+
+      balanceContainer.onclick = function () {
+        depositModal.style.display = "block";
+      };
+
+      closeDepositModal.onclick = function () {
+        depositModal.style.display = "none";
+      };
+
+      cancelDeposit.onclick = function () {
+        depositModal.style.display = "none";
+      };
+
+      continueToStripe.onclick = function () {
+        const amount = document.getElementById("depositAmount").value;
+        alert(`Redirigiendo a Stripe para procesar el pago de $${amount}...`);
+        // Aquí iría tu integración con Stripe
+        depositModal.style.display = "none";
+      };
+
+      // Asegúrate de que el modal de depósito también se cierre al hacer clic fuera
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+        if (event.target == depositModal) {
+          depositModal.style.display = "none";
+        }
+      };
+    </script>
   </body>
 </html>

@@ -1,9 +1,11 @@
 from django.urls import path
-from django.http import HttpResponse
-
-def test_view(request):
-    return HttpResponse("¡Funciona!")
+from . import views
 
 urlpatterns = [
-    path('', test_view),
+    path('comprar/', views.comprar, name='comprar'),
+    path('vender/', views.vender, name='vender'),
+    path('portafolio/', views.portafolio, name='portafolio'),
+
+    path('orden_resultado/', views.orden_resultado, name='orden_resultado'),
+
 ]
