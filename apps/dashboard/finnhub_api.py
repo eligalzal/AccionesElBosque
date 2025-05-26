@@ -1,9 +1,10 @@
 import requests
 import time
 import yfinance as yf
+from django.conf import settings
 
-FINNHUB_API_KEY = 'd0lf25pr01qhb0284op0d0lf25pr01qhb0284opg'
-
+FINNHUB_API_KEY =  settings.FINNHUB_API_KEY
+ 
 def obtener_precio_actual(symbol):
     url = f"https://finnhub.io/api/v1/quote?symbol={symbol}&token={FINNHUB_API_KEY}"
 

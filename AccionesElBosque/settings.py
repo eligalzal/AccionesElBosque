@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'AccionesElBosque.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'isw',
+        'NAME': config('DB_NAME'),
         'USER': 'root',
-        'PASSWORD': 'iihHbSpAmLxQboYbeAPFlstGorRhKwNH',
-        'HOST': 'trolley.proxy.rlwy.net',  
-        'PORT': '30342',       
+        'PASSWORD': config('DB_PASSWORD') ,
+        'HOST': config('DB_HOST'),  
+        'PORT': config('DB_PORT') ,       
         'OPTIONS': {
             'ssl': {'verify_server_cert': False},
         },
@@ -142,6 +142,9 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 ALPACA_BROKER_API_KEY = config("ALPACA_BROKER_API_KEY")
 ALPACA_BROKER_SECRET_KEY = config("ALPACA_BROKER_SECRET_KEY")
+
+
+FINNHUB_API_KEY = config("FINNHUB_API_KEY")
 
 ADMINS = [("Eliana", config('ADMINS'))]
 

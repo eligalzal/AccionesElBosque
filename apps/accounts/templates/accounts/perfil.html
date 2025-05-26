@@ -57,7 +57,6 @@
         gap: 20px;
       }
 
-      /* Sidebar estilos */
       .sidebar {
         width: 80px;
         padding: 20px 0;
@@ -110,7 +109,6 @@
         color: rgb(56, 61, 21);
       }
 
-      /* Contenido principal */
       .content {
         flex: 1;
         display: flex;
@@ -118,7 +116,6 @@
         gap: 20px;
       }
 
-      /* Header */
       .header {
         display: flex;
         justify-content: space-between;
@@ -135,7 +132,6 @@
         color: white;
       }
 
-      /* Main Content */
       .main-content {
         flex: 1;
         padding: 25px;
@@ -145,7 +141,6 @@
         overflow: auto;
       }
 
-      /* Tabs de navegación */
       .profile-tabs {
         display: flex;
         margin-bottom: 30px;
@@ -174,7 +169,6 @@
         border-bottom: 3px solid var(--gold-accent);
       }
 
-      /* Contenedor de la pestaña */
       .tab-content {
         display: none;
       }
@@ -193,7 +187,6 @@
         }
       }
 
-      /* Tarjetas para secciones */
       .profile-card {
         background-color: var(--background);
         border-radius: var(--card-radius);
@@ -223,7 +216,6 @@
         color: var(--gold-accent);
       }
 
-      /* Campos del formulario */
       .form-group {
         margin-bottom: 20px;
       }
@@ -248,7 +240,6 @@
         color: var(--text);
       }
 
-      /* Toggle Switch */
       .toggle-switch {
         position: relative;
         display: inline-block;
@@ -299,7 +290,6 @@
         background: linear-gradient(145deg, #e16bff, #c25ce2);
       }
 
-      /* Select personalizado */
       .neomorphic-select {
         position: relative;
         width: 100%;
@@ -332,7 +322,6 @@
         pointer-events: none;
       }
 
-      /* Input personalizado */
       .neomorphic-input {
         width: 100%;
         padding: 12px 15px;
@@ -723,7 +712,6 @@
         font-size: 16px;
       }
 
-      /* Responsive para la sección de usuario y saldo */
       @media (max-width: 768px) {
         .user-info {
           flex-direction: column;
@@ -765,23 +753,18 @@
   </head>
   <body>
     <div class="container">
-      <!-- Sidebar -->
       <div class="sidebar">
         <a href="/dashboard/" class="menu-item">
           <i class="fas fa-arrow-left"></i>
         </a>
       </div>
 
-      <!-- Contenido principal -->
       <div class="content">
-        <!-- Header -->
         <div class="header">
           <div class="section-title">Gestión de Perfil</div>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
-          <!-- Información de usuario -->
           <div class="user-info">
             <div class="user-avatar">
               <i class="fas fa-user"></i>
@@ -805,7 +788,6 @@
             </div>
           </div>
 
-          <!-- Tabs de navegación -->
           <div class="profile-tabs">
             <button class="tab-button active" data-tab="notifications">
               Notificaciones
@@ -821,8 +803,6 @@
             </button>
           </div>
 
-          <!-- Contenido de las tabs -->
-          <!-- Tab Notificaciones -->
           <div id="notifications" class="tab-content active">
             <div class="profile-card">
               <h3 class="card-title">
@@ -911,7 +891,6 @@
             </div>
           </div>
 
-          <!-- Tab Visualización del Portafolio -->
           <div id="visualization" class="tab-content">
             <div class="profile-card">
               <h3 class="card-title">
@@ -1024,7 +1003,6 @@
               </div>
             </div>
           </div>
-          <!-- Tab Configuración de Operaciones -->
           <div id="operations" class="tab-content">
             <div class="profile-card">
               <h3 class="card-title">
@@ -1132,7 +1110,6 @@
             </div>
           </div>
 
-          <!-- Tab Listas de Observación -->
           <div id="watchlist" class="tab-content">
             <div class="profile-card">
               <h3 class="card-title">
@@ -1150,7 +1127,6 @@
                 </div>
 
                 <div class="watchlist-items">
-                  <!-- Item 1 -->
                   <div class="watchlist-item">
                     <div class="watchlist-stock-info">
                       <div class="watchlist-stock-symbol">APPL</div>
@@ -1166,7 +1142,6 @@
                     </div>
                   </div>
 
-                  <!-- Item 2 -->
                   <div class="watchlist-item">
                     <div class="watchlist-stock-info">
                       <div class="watchlist-stock-symbol">MSFT</div>
@@ -1184,7 +1159,6 @@
                     </div>
                   </div>
 
-                  <!-- Item 3 -->
                   <div class="watchlist-item">
                     <div class="watchlist-stock-info">
                       <div class="watchlist-stock-symbol">GOOGL</div>
@@ -1200,7 +1174,6 @@
                     </div>
                   </div>
 
-                  <!-- Item 4 -->
                   <div class="watchlist-item">
                     <div class="watchlist-stock-info">
                       <div class="watchlist-stock-symbol">AMZN</div>
@@ -1274,7 +1247,6 @@
             </div>
           </div>
 
-          <!-- Modal para añadir watchlist -->
           <div id="addWatchlistModal" class="modal">
             <div class="modal-content">
               <div class="modal-header">
@@ -1345,12 +1317,9 @@
         </div>
       </div>
     </div>
-    <!-- Scripts JavaScript para la funcionalidad -->
     <script>
-      // Cambio de pestañas
       document.querySelectorAll(".tab-button").forEach((button) => {
         button.addEventListener("click", () => {
-          // Desactivar todas las pestañas
           document.querySelectorAll(".tab-button").forEach((btn) => {
             btn.classList.remove("active");
           });
@@ -1358,7 +1327,6 @@
             content.classList.remove("active");
           });
 
-          // Activar la pestaña seleccionada
           button.classList.add("active");
           document
             .getElementById(button.getAttribute("data-tab"))
@@ -1366,7 +1334,6 @@
         });
       });
 
-      // Actualizar valores de los sliders
       document
         .getElementById("portfolioThreshold")
         .addEventListener("input", function () {
@@ -1391,7 +1358,6 @@
           this.nextElementSibling.textContent = this.value + "%";
         });
 
-      // Funcionalidad modal
       const modal = document.getElementById("addWatchlistModal");
       const btn = document.getElementById("addWatchlistBtn");
       const span = document.getElementsByClassName("close-modal")[0];
@@ -1410,7 +1376,6 @@
         }
       };
 
-      // Funcionalidad del modal de ingreso de dinero
       const depositModal = document.getElementById("depositModal");
       const balanceContainer = document.getElementById("balanceContainer");
       const closeDepositModal = document.getElementById("closeDepositModal");

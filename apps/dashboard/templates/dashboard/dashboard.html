@@ -1330,7 +1330,7 @@
                   if (currentStock) {
                       const form = document.createElement('form');
                       form.method = 'GET';
-                      form.action = '/trading/comprar/'; // Ajusta esta URL según tu urls.py
+                      form.action = '/trading/comprar/';
 
                       const symbolInput = document.createElement('input');
                       symbolInput.type = 'hidden';
@@ -1369,7 +1369,6 @@
         document.getElementById("planModal").style.display = "none";
       }
 
-      // Cierra al hacer clic fuera del modal
       window.onclick = function(event) {
         const modal = document.getElementById("planModal");
         if (event.target == modal) {
