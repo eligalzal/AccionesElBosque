@@ -71,5 +71,7 @@ Para el proyecto de Django:
 Ejecutar el proyecto
 
 ```bash
+  cd AccionesElBosque
+  venv\Scripts\activate
   python manage.py runserver
 ```
