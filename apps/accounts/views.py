@@ -6,7 +6,6 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 import logging
 import stripe
-import json
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
@@ -154,18 +153,14 @@ def perfil(request):
     username = request.session.get('username')
 
     if not username:
-        return redirect('login')  # Protección si no hay sesión activa
-
-    # Consulta los datos del usuario
+        return redirect('login')  
     with connection.cursor() as cursor:
         cursor.execute("SELECT first_name, last_name, email, plan, saldo FROM usuarios WHERE username = %s;", [username])
         user = cursor.fetchone()
         first_name, last_name, email, plan, saldo = user
 
-    # Procesar respuesta del pago
     pago_status = request.GET.get("pago")
-    monto = request.session.get("monto_pago")  # Recupera el monto temporalmente guardado
-
+    monto = request.session.get("monto_pago")  
     with connection.cursor() as cursor:
         cursor.execute("SELECT alpaca_id, tr_id FROM usuarios WHERE username = %s;", [username])
         info = cursor.fetchone()
@@ -184,23 +179,30 @@ def perfil(request):
 
         print(alpaca_response)
 
-        del request.session["monto_pago"]  # Limpia la sesión
+        send_mail(
+        "¡Eres oficialmente premium!",
+        f"Hola {first_name},\n\nTu recarga de ${monto} ha sido procesada exitosamente y tu plan actual es {plan}.\n\n¡Gracias por confiar en nosotros!\n\nEquipo Acciones El Bosque",
+        "elianita.galban@gmail.com",  
+        [email, 'egalbanz@unbosque.edu.co'],  
+        fail_silently=False
+    )
+
+        del request.session["monto_pago"]  
 
     elif pago_status == "fallido":
         messages.warning(request, "El pago fue cancelado o fallido.")
 
-    # Si el usuario hace POST para iniciar un pago
     if request.method == "POST":
         try:
             monto = float(request.POST.get("depositAmount"))
-            request.session["monto_pago"] = monto  # Guarda temporalmente el monto
+            request.session["monto_pago"] = monto  
             
             session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
                 line_items=[{
                     "price_data": {
                         "currency": "usd",
-                        "unit_amount": int(monto * 100),  # Stripe usa centavos
+                        "unit_amount": int(monto * 100),  
                         "product_data": {
                             "name": f"Recarga de saldo: ${monto}",
                         },
@@ -228,8 +230,6 @@ def perfil(request):
 #        'stripe_public_key': settings.STRIPE_PUBLIC_KEY
 #    })
 
-
-
 @csrf_exempt
 def crear_sesion_stripe(request, monto):
     
@@ -240,7 +240,7 @@ def crear_sesion_stripe(request, monto):
         line_items=[{
             'price_data': {
                 'currency': 'usd',
-                "unit_amount": int(monto * 100),  # $10.00 en centavos
+                "unit_amount": int(monto * 100), 
                 'product_data': {
                     'name': 'Suscripción Mensual',
                 },

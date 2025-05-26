@@ -3,19 +3,21 @@ from django.shortcuts import render
 from django.db import connection
 from ..dashboard.finnhub_api import *
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 
 
 def portafolio(request):
     usuario = request.session.get('username')
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT alpaca_id FROM usuarios WHERE username = %s", (usuario,))
+        cursor.execute("SELECT alpaca_id, saldo FROM usuarios WHERE username = %s", (usuario,))
         info = cursor.fetchone()
 
     if not info:
         return render(request, 'trading/orden_resultado.html', {'resultado': 'Usuario no encontrado'})
 
     alpaca_id = info[0]
+    saldo = info[1]
 
     with connection.cursor() as cursor:
         cursor.execute("""
@@ -27,6 +29,7 @@ def portafolio(request):
         """, (alpaca_id,)) 
         posiciones = cursor.fetchall()
 
+
     portafolio = []
     for symbol, cantidad in posiciones:
         precio_actual = obtener_precio_actual(symbol)
@@ -35,10 +38,11 @@ def portafolio(request):
             'symbol': symbol,
             'cantidad': cantidad,
             'precio_actual': precio_actual,
-            'valor_total': valor_total
+            'valor_total': valor_total,
+            
         })
 
-    return render(request, 'trading/portafolio.html', {'portafolio': portafolio})
+    return render(request, 'trading/portafolio.html', {'portafolio': portafolio, 'saldo': saldo})
 
 
 def vender(request): 
@@ -59,7 +63,6 @@ def vender(request):
         symbol = request.POST['symbol']
         qty = int(request.POST['qty'])
 
-        # Verificar si el usuario tiene suficientes acciones
         with connection.cursor() as cursor:
             cursor.execute("""
                 SELECT cantidad FROM portafolio 
@@ -92,7 +95,6 @@ def vender(request):
                 }
             })
 
-        # Insertar orden en tabla
         precio_unitario = None
         total = None
         if estado == 'filled' and fills:
@@ -113,7 +115,6 @@ def vender(request):
             time.sleep(5)
             sincronizar_ordenes(alpaca_id)
 
-        # Obtener estado y total actualizados
         with connection.cursor() as cursor:
             cursor.execute("SELECT estado, total FROM ordenes WHERE order_id = %s", (order_id,))
             orden = cursor.fetchone()
@@ -133,7 +134,19 @@ def vender(request):
                         'qty': qty
                     }
                 })
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT first_name, email FROM usuarios WHERE username = %s", [usuario])
+                user_info = cursor.fetchone()
+                nombre_usuario = user_info[0]
+                email_usuario = user_info[1]
 
+            send_mail(
+                "¡Venta de acción completada!",
+                f"Hola {nombre_usuario},\n\nTu orden de venta ha sido completada exitosamente.\n\nAcción: {symbol}\nCantidad: {qty}\nMonto total recibido: ${total_final:.2f}\n\nGracias por operar con Acciones El Bosque.",
+                "elianita.galban@gmail.com", 
+                [email_usuario, 'egalbanz@unbosque.edu.co'],
+                fail_silently=False
+            )
             return render(request, 'trading/orden_resultado.html', {
                 'resultado': {
                     'status': 'filled',
@@ -178,8 +191,6 @@ def comprar(request):
     if request.method == 'POST':
         symbol = request.POST['symbol']
         qty = int(request.POST['qty'])
-
-        # Precio actual antes de comprar (opcional, solo para mostrar o validar)
         precio_actual = obtener_precio_actual(symbol)
 
         resultado_orden = place_market_order(alpaca_id, symbol, qty, 'buy')
@@ -209,6 +220,20 @@ def comprar(request):
                 total_pagado += (Decimal(fill['qty']) * Decimal(fill['price']))
 
             ok, msg = actualizar_saldo(alpaca_id, (total_pagado + (total_pagado*0.02)))
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT first_name, email FROM usuarios WHERE username = %s", [usuario])
+                user_info = cursor.fetchone()
+                nombre_usuario = user_info[0]
+                email_usuario = user_info[1]
+
+            send_mail(
+                "¡Compra de acción exitosa!",
+                f"Hola {nombre_usuario},\n\nTu orden de compra ha sido completada exitosamente.\n\nAcción: {symbol}\nCantidad: {qty}\nPrecio total: ${total_pagado:.2f}\n\nGracias por invertir con Acciones El Bosque.",
+                "elianita.galban@gmail.com",  
+                [email_usuario, 'egalbanz@unbosque.edu.co'],
+                fail_silently=False
+            )
+
             if not ok:
                 return render(request, 'trading/orden_resultado.html', {
                     'resultado': f"Orden filled pero error descontando saldo: {msg}"

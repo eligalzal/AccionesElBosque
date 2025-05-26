@@ -1,8 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
 from .finnhub_api import *
 from django.db import connection
 from django.http import JsonResponse
 import json
+import stripe
+from django.conf import settings
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+def homepage(request):
+    
+    return render(request, "dashboard/homepage.html")
+
 
 
 def search_stock(request):
@@ -14,13 +24,10 @@ def search_stock(request):
             if not ticker:
                 return JsonResponse({'error': 'Ticker es requerido'}, status=400)
             
-            # Obtener datos básicos del stock
             stock_info = get_stock_data(ticker)
             
-            # Obtener datos detallados de Finnhub
             detailed_info = obtener_datos_finnhub(ticker)
             
-            # Obtener nombre del ticker desde la base de datos si existe
             with connection.cursor() as cursor:
                 cursor.execute("""
                     SELECT nombre FROM intereses WHERE ticker = %s
@@ -28,7 +35,6 @@ def search_stock(request):
                 result = cursor.fetchone()
                 stock_name = result[0] if result else ticker
             
-            # Combinar información
             response_data = {
                 'ticker': ticker,
                 'name': stock_name,
@@ -132,22 +138,44 @@ def dashboard(request):
 
 
 
-def ejemplo(request):
-    print("➡ Vista 'ejemplo' ejecutada")
+def change_plan(request): 
     usuario = request.session.get('username')
-    print(usuario) 
-    simbolo = 'AAPL'
-    try:
-        fechas, precios = obtener_precios_historicos_yahoo(simbolo)
-        print("Fechas:", fechas)
-        print("Precios:", precios)
-    except Exception as e:
-        print("Error obteniendo datos históricos:", e)
-        fechas, precios = [], []
+    plan = request.session.get("selected_plan")  
+    pago_status = request.GET.get("pago")  
 
-    return render(request, "dashboard/ejemplo.html", {
-        "labels": json.dumps(fechas),
-        "data": json.dumps(precios)
-    })
+    if pago_status == "exito" and plan:
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE usuarios SET plan = %s WHERE username = %s", [plan, usuario])
+        del request.session["selected_plan"]  
+
+    if request.method == "POST":
+        plan = request.POST.get('plan')
+
+        if plan in ["Mensual", "Anual"]:
+            request.session["selected_plan"] = plan  
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[{
+                    "price_data": {
+                        "currency": "usd",
+                        "unit_amount": 1200 if plan == "Mensual" else 12000,
+                        "product_data": {
+                            "name": plan,
+                        },
+                    },
+                    "quantity": 1,
+                }],
+                mode="payment",
+                success_url=request.build_absolute_uri(request.path) + '?pago=exito',
+                cancel_url=request.build_absolute_uri(request.path) + '?pago=fallido',
+            )
+            return redirect(session.url, code=303)
+
+        elif plan == "free":
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE usuarios SET plan = %s WHERE username = %s", [plan, usuario])
+            return redirect("dashboard")  
+    return render(request, "dashboard/dashboard.html")
+
 
     

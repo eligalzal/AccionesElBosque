@@ -8,5 +8,6 @@ urlpatterns = [
     path('perfil/', views.perfil, name='perfil'),
     path('crear_sesion_stripe/', views.crear_sesion_stripe, name='crear_sesion_stripe'),
     path('finalizar_registro/', views.finalizar_registro, name='finalizar_registro'),
+
     ]
 

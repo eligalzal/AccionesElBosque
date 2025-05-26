@@ -3,45 +3,500 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Resultado de la Orden</title>
+    <title>Tu Portafolio</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --dark-bg: #0d0d18;
+        --gold-accent: rgba(245, 203, 134, 0.76);
+        --dark-accent: #16161f;
+        --light-accent: #1e1e2d;
+        --text-color: #8a8a9e;
+        --primary: #6d9eeb;
+        --success: #69db7c;
+        --danger: #ff6b6b;
+        --shadow-dark: #07070d;
+        --shadow-light: #131324;
+        --small-radius: 8px;
+        --bg: #0d0d18;
+        --background: #0d0d18;
+        --card-radius: 12px;
+        --light: #1a1a2e;
+        --dark: #06060c;
+        --text: #eaeaea;
+        --radius: 1rem;
+        --transition: 0.4s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Quicksand", serif;
+      }
+
+      body {
+        background-color: var(--dark-bg);
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        padding: 20px;
+      }
+
+      .container {
+        display: flex;
+        width: 100%;
+        gap: 20px;
+      }
+      h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 40px;
+        text-align: center;
+        text-shadow: 2px 2px 4px var(--shadow-dark);
+      }
+
+      .portfolio-container {
+        width: 100%;
+        background: var(--background);
+        border-radius: 24px;
+        box-shadow: inset 20px 20px 18px var(--shadow-dark),
+          inset -20px -20px 18px var(--shadow-light);
+        padding: 30px;
+        overflow-x: auto;
+        animation: slideUp 0.6s ease-out;
+      }
+
+      .portfolio-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: transparent;
+      }
+
+      .portfolio-table th {
+        background: var(--background);
+        color: var(--text);
+        font-weight: 600;
+        font-size: 16px;
+        padding: 20px 15px;
+        text-align: left;
+        border: none;
+        position: relative;
+      }
+
+      .portfolio-table th:first-child {
+        border-radius: var(--card-radius) 0 0 0;
+      }
+
+      .portfolio-table th:last-child {
+        border-radius: 0 var(--card-radius) 0 0;
+      }
+
+      .portfolio-table td {
+        padding: 20px 15px;
+        border: none;
+        background: var(--background);
+        color: var(--text-color);
+        font-size: 15px;
+        vertical-align: middle;
+      }
+
+      .portfolio-table tr {
+        border-bottom: 1px solid var(--dark-accent);
+        transition: all 0.3s ease;
+      }
+
+      .portfolio-table tr:hover {
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        box-shadow: 4px 4px 8px var(--shadow-dark),
+          -4px -4px 8px var(--shadow-light);
+        border-radius: var(--small-radius);
+      }
+
+      .portfolio-table tr:last-child td:first-child {
+        border-radius: 0 0 0 var(--card-radius);
+      }
+
+      .portfolio-table tr:last-child td:last-child {
+        border-radius: 0 0 var(--card-radius) 0;
+      }
+
+      .symbol-cell {
+        font-weight: 600;
+        color: var(--gold-accent);
+        font-size: 16px;
+      }
+
+      .price-cell,
+      .quantity-cell {
+        font-weight: 500;
+        color: var(--text);
+      }
+
+      .total-value-cell {
+        font-weight: 600;
+        color: var(--success);
+        font-size: 16px;
+      }
+
+      .sell-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .quantity-input {
+        background: var(--background);
+        border: 2px solid var(--dark-accent);
+        border-radius: var(--small-radius);
+        padding: 8px 12px;
+        color: var(--text);
+        font-size: 14px;
+        width: 80px;
+        box-shadow: inset 4px 4px 8px var(--shadow-dark),
+          inset -4px -4px 8px var(--shadow-light);
+        transition: all 0.3s ease;
+      }
+
+      .quantity-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: inset 4px 4px 8px var(--shadow-dark),
+          inset -4px -4px 8px var(--shadow-light),
+          0 0 0 2px rgba(109, 158, 235, 0.2);
+      }
+
+      .sell-button {
+        background: linear-gradient(145deg, var(--danger), #e55555);
+        border: none;
+        border-radius: var(--small-radius);
+        padding: 10px 20px;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 4px 4px 8px var(--shadow-dark),
+          -4px -4px 8px var(--shadow-light);
+        min-width: 80px;
+      }
+
+      .sell-button:hover {
+        transform: scale(0.98);
+        box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.3),
+          inset -4px -4px 8px rgba(255, 255, 255, 0.1);
+      }
+
+      .sell-button:active {
+        transform: scale(0.95);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .menu-item {
+        margin-bottom: 2rem;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 62px;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        box-shadow: 8px 8px 16px #07070d, -8px -8px 16px #131323;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--gold-accent);
+      }
+
+      .menu-item:hover {
+        box-shadow: inset 8px 8px 16px #07070d, inset -8px -8px 16px #131323;
+        color: rgb(43, 45, 30);
+      }
+
+      .menu-item.active {
+        box-shadow: inset 8px 8px 16px #07070d, inset -8px -8px 16px #131323;
+        color: rgb(56, 61, 21);
+      }
+
+      .sidebar {
+        width: 80px;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 24px;
+        background: #0d0d18;
+        box-shadow: 20px 20px 18px #07070c, -20px -20px 18px #131324;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 3rem;
+        width: 50px;
+        height: 50px;
+        padding: 1rem;
+
+        color: rgb(110, 85, 34);
+        font-size: 2.5rem;
+        transition: all 0.3s ease;
+        border-radius: 17px;
+        background: linear-gradient(145deg, rgb(19, 16, 12), rgb(36, 31, 24));
+        box-shadow: 5px 5px 7px #07070d, -5px -5px 7px #131323;
+      }
+      .logo-icon {
+        margin-bottom: 3rem;
+        color: var(--text-color);
+      }
+      .menu-item {
+        margin-bottom: 2rem;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 62px;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        box-shadow: 8px 8px 16px #07070d, -8px -8px 16px #131323;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--gold-accent);
+      }
+
+      .menu-item:hover {
+        box-shadow: inset 8px 8px 16px #07070d, inset -8px -8px 16px #131323;
+        color: rgb(43, 45, 30);
+      }
+
+      .menu-item.active {
+        box-shadow: inset 8px 8px 16px #07070d, inset -8px -8px 16px #131323;
+        color: rgb(56, 61, 21);
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 25px;
+        border-radius: 24px;
+        background: #0d0d18;
+        box-shadow: inset 21px 21px 42px #090910, inset -21px -21px 42px #111120;
+        position: relative;
+      }
+
+      .section-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: white;
+      }
+
+      .user-profile {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 62px;
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+        box-shadow: 8px 8px 16px #07070d, -8px -8px 16px #131323;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: var(--gold-accent);
+      }
+
+      .user-profile:hover {
+        box-shadow: inset 8px 8px 16px #07070d, inset -8px -8px 16px #131323;
+        color: rgb(43, 45, 30);
+      }
+
+      .profile-menu {
+        position: absolute;
+        top: 75px;
+        right: 25px;
+        background: #0d0d18;
+        border-radius: 16px;
+        box-shadow: 8px 8px 16px #07070d, -8px -8px 16px #131323;
+        width: 200px;
+        display: none;
+        z-index: 100;
+      }
+
+      .profile-menu.active {
+        display: block;
+      }
+
+      .profile-menu-item {
+        padding: 12px 15px;
+        border-bottom: 1px solid #151529;
+        color: var(--gold-accent);
+        transition: all 0.3s ease;
+      }
+
+      .profile-menu-item:last-child {
+        border-bottom: none;
+      }
+
+      .profile-menu-item:hover {
+        background: linear-gradient(145deg, #0e0e1a, #0c0c16);
+      }
+
+      .username {
+        font-weight: bold;
+      }
+
+      .profile-menu-item a {
+        color: var(--gold-accent);
+        text-decoration: none;
+        display: block;
+      }
+    </style>
   </head>
+
   <body>
-    <h2>Tu Portafolio</h2>
-    <table border="1">
-      <tr>
-        <th>Símbolo</th>
-        <th>Cantidad</th>
-        <th>Precio Actual</th>
-        <th>Valor Total</th>
-        <th>Acción</th>
-      </tr>
-      {% for item in portafolio %}
-      <tr>
-        <td>{{ item.symbol }}</td>
-        <td>{{ item.cantidad }}</td>
-        <td>{{ item.precio_actual }}</td>
-        <td>{{ item.valor_total }}</td>
-        <td>
-          <form method="post" action="{% url 'vender' %}">
-            {% csrf_token %}
-            <input type="hidden" name="symbol" value="{{ item.symbol }}" />
-            <input
-              type="number"
-              name="qty"
-              min="1"
-              max="{{ item.cantidad }}"
-              value="1"
-              required
-            />
-            <button type="submit">Vender</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
+    <div class="container">
+      <div class="sidebar">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="logo-icon"
+          width="40"
+          height="40"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M7 20h10" />
+          <path d="M10 20c5.5-2.5.8-6.4 3-10" />
+          <path d="M9.5 9.4C8.6 6.5 5.3 5.4 2.4 6.3c.9 2.9 4.2 4 7.1 3.1Z" />
+          <path d="M14.5 6.4c.9-2.9 4.2-4 7.1-3.1-.9 2.9-4.2 4-7.1 3.1Z" />
+        </svg>
+        <div class="main-menu">
+          <a href="/dashboard/" class="menu-item">
+            <i class="fas fa-chart-line"></i>
+          </a>
+
+          <a href="/trading/portafolio/" class="menu-item active">
+            <i class="fas fa-briefcase"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="header">
+          <div class="section-title">Tu portafolio</div>
+
+          <div class="user-profile" data-tab="profile">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="profile-menu" id="profileMenu">
+            <div class="profile-menu-item">
+              <div class="username">{{ request.session.username }}</div>
+            </div>
+            <div class="profile-menu-item">
+              <div class="saldo">Saldo ${{ saldo }}</div>
+            </div>
+            <div class="profile-menu-item">
+              <a href="/accounts/perfil">Configuración</a>
+            </div>
+            <div class="profile-menu-item">
+              <a href="/accounts/login">Cerrar Sesión</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="portfolio-container">
+          <table class="portfolio-table">
+            <tr>
+              <th>Símbolo</th>
+              <th>Cantidad</th>
+              <th>Precio Actual</th>
+              <th>Valor Total</th>
+              <th>Acción</th>
+            </tr>
+            {% for item in portafolio %}
+            <tr>
+              <td class="symbol-cell">{{ item.symbol }}</td>
+              <td class="quantity-cell">{{ item.cantidad }}</td>
+              <td class="price-cell">{{ item.precio_actual }}</td>
+              <td class="total-value-cell">{{ item.valor_total }}</td>
+              <td>
+                <form
+                  method="post"
+                  action="{% url 'vender' %}"
+                  class="sell-form"
+                >
+                  {% csrf_token %}
+                  <input
+                    type="hidden"
+                    name="symbol"
+                    value="{{ item.symbol }}"
+                  />
+                  <input
+                    type="number"
+                    name="qty"
+                    min="1"
+                    max="{{ item.cantidad }}"
+                    value="1"
+                    required
+                    class="quantity-input"
+                  />
+                  <button type="submit" class="sell-button">Vender</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const profileButton = document.querySelector(".user-profile");
+        const profileMenu = document.getElementById("profileMenu");
+
+        profileButton.addEventListener("click", function (e) {
+          e.stopPropagation();
+          profileMenu.classList.toggle("active");
+        });
+
+        document.addEventListener("click", function (e) {
+          if (
+            !profileMenu.contains(e.target) &&
+            !profileButton.contains(e.target)
+          ) {
+            profileMenu.classList.remove("active");
+          }
+        });
+      });
+    </script>
   </body>
 </html>

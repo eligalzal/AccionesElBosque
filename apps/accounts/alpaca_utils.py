@@ -151,7 +151,6 @@ def create_ach(user_id):
         "Accept": "application/json"
     }
 
-    # Datos de prueba — deberías usar valores válidos y seguros en producción
     ach_data = {
         "account_owner_name": "John Doe",
         "bank_account_type": "CHECKING",
@@ -265,7 +264,6 @@ def sincronizar_ordenes(alpaca_id):
             total = precio_unitario * qty_filled
 
             if estado == "filled":
-                # 1. Actualiza orden
                 cursor.execute("""
                     UPDATE ordenes
                     SET estado = %s, precio_unitario = %s, total = %s
@@ -273,7 +271,6 @@ def sincronizar_ordenes(alpaca_id):
                 """, (estado, precio_unitario, total, order_id))
                 connection.commit()
 
-                # 2. Actualiza portafolio
                 cursor.execute("SELECT id, cantidad FROM portafolio WHERE alpaca_id = %s AND symbol = %s",
                                (alpaca_id, symbol))
                 existente = cursor.fetchone()

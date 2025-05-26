@@ -11,7 +11,7 @@
         --text-color: #e0e0e0;
         --shadow-light: #1a1a30;
         --shadow-dark: #050510;
-        --accent: #f5cb86; /* Dorado */
+        --accent: #f5cb86;
         --accent-light: #ffeb99;
         --accent-dark: #b39700;
         --success: #2ecc71;
@@ -69,7 +69,6 @@
         padding: 5px 0;
       }
 
-      /* Tabs Styling */
       .tabs {
         display: flex;
         margin-bottom: 25px;
@@ -129,7 +128,6 @@
         }
       }
 
-      /* Progress bar */
       .progress-container {
         width: 100%;
         height: 8px;
@@ -149,7 +147,6 @@
         box-shadow: 0 0 10px var(--accent-dark);
       }
 
-      /* Form styling */
       form {
         width: 100%;
       }
@@ -203,7 +200,6 @@
         font-size: 14px;
       }
 
-      /* Buttons */
       .button-group {
         display: flex;
         margin-top: 30px;
@@ -251,7 +247,6 @@
         padding: 15px 30px;
       }
 
-      /* Interests bubbles */
       .interests-container {
         display: flex;
         flex-wrap: wrap;
@@ -292,7 +287,6 @@
         font-weight: 500;
       }
 
-      /* Plan Chooser Styling */
       .plan-chooser {
         width: 100%;
         margin-bottom: 30px;
@@ -555,7 +549,7 @@
           <form class="plan-chooser">
             <div class="header"><label>Escoge tu plan</label> <br /></div>
             <div class="plan-option">
-              <input value="free" id="free" name="plan" type="radio" />
+              <input value="Gratis" id="free" name="plan" type="radio" />
               <label for="free">
                 <div class="plan-info">
                   <span class="plan-cost">$0</span>
@@ -592,18 +586,14 @@
           </div>
         </div>
       </form>
+      <span class="switch">
+        ¿Ya tienes una cuenta?
+        <a href="/accounts/login/" class="signup_tog">Inicia Sesión</a>
+      </span>
     </div>
-    {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li class="{{ message.tags }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // Tab navigation
         const tabs = document.querySelectorAll(".tab-btn");
         const tabContents = document.querySelectorAll(".tab-content");
         const progressBar = document.getElementById("progress");
@@ -623,7 +613,6 @@
           "input[name='interest3']"
         );
 
-        // Set active tab function
         function setActiveTab(targetId) {
           tabs.forEach((tab) => tab.classList.remove("active"));
           tabContents.forEach((content) => content.classList.remove("active"));
@@ -636,7 +625,6 @@
           targetTab.classList.add("active");
           targetContent.classList.add("active");
 
-          // En la parte donde se manejan los tabs, modifica la condición para incluir el tab de plan:
           if (targetId === "tab-account") {
             progressBar.style.width = "25%";
           } else if (targetId === "tab-personal") {
@@ -669,7 +657,6 @@
           });
         });
 
-        // Interest selection
         let selectedInterests = [];
 
         interestBubbles.forEach((bubble) => {
@@ -690,12 +677,10 @@
 
             selectedCountEl.textContent = selectedInterests.length;
 
-            // Llenar inputs ocultos
             interest1Input.value = selectedInterests[0] || "";
             interest2Input.value = selectedInterests[1] || "";
             interest3Input.value = selectedInterests[2] || "";
 
-            // Validar cantidad
             const interestCount = document.querySelector(".interest-count");
             if (selectedInterests.length < 3) {
               interestCount.classList.add("count-error");
