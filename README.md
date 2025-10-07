@@ -1,6 +1,6 @@
 # Acciones El Bosque
 
-Acciones El Bosque es una aplicación web desarrollada en Django y HTML/CSS/JavaScript, orientada a la compra y venta de acciones englobadas en el Day Trading. Acciones El Bosque hace uso de APIs como Alpaca, Finnhub, Yahoo Finance y Stripe para recuperar datos del mercado, realizar operaciones, registros y recargas de dinero. Todo esto desde entornos sandbox para asegurar la integridad de los datos de este software pequeño. Con una interfaz sencilla e intuitiva basa en el diseño neumórfico, Acciones El Bosque proporciona facilidad de compra/venta y visualización del comportamiento en tiempo real de acciones de interés.
+Acciones El Bosque es una aplicación web desarrollada en Django y HTML/CSS/JavaScript, orientada a la compra y venta de acciones englobadas en el Day Trading. Acciones El Bosque hace uso de APIs como Alpaca, Finnhub, Yahoo Finance y Stripe para recuperar datos del mercado, realizar operaciones, registros y recargas de dinero. Todo esto desde entornos sandbox para asegurar la integridad de los datos de este software pequeño. Con una interfaz sencilla e intuitiva basada en el diseño neumórfico, Acciones El Bosque proporciona facilidad de compra/venta y visualización del comportamiento en tiempo real de acciones de interés.
 
 ## Screenshots
 
